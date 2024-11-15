@@ -1,4 +1,4 @@
-ibrary(dplyr)
+library(dplyr)
 
 #------------------- generer_notes_automatique --------------------------
 # UE :  nom d'une UE
