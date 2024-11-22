@@ -38,8 +38,8 @@ compensation_intra_UE <- function(df){
   df <- df %>%
     group_by(UE) %>%
     mutate(
-      Moyenne_UE = mean(Moyenne, na.rm = TRUE),
-      Validation = ifelse(Moyenne_UE >= 10 & Validation == "Non valide", "ValideComp", Validation)
+      Moyenne_EC = mean(Moyenne, na.rm = TRUE),
+      Validation = ifelse(Moyenne_EC >= 10 & Validation == "Non valide", "ValideComp", Validation)
     ) %>%
     ungroup()
   return (df)
@@ -86,7 +86,7 @@ poids_FONDA_S3 <- list(
 
 dfs3_fonda <- generer_notes_automatique("FONDA S3", EC_FONDA_S3, evaluations_FONDA_S3, poids_FONDA_S3)
 
-EC_EXP_S3 <- c("ACSA","Chimie","Electro","TP Phys","Thermo")
+EC_EXP_S3 <- c("ACSA","Chimie","Electro","TP_Phys","Thermo")
 evaluations_EXP_S3 <- list(
   ACSA = c("DS2", "TP"),
   Chimie = c("DS1", "DS2","TP"),
@@ -124,30 +124,18 @@ poids_ORT_S3 <- list(
 
 dfs3_ort <- generer_notes_automatique("ORT S3", EC_ORT_S3, evaluations_ORT_S3, poids_ORT_S3)
 
-EC_HUMATC_S3 <- c("ANG","C&C","EPS")
-evaluations_HUMATC_S3 <-list(
+EC_HUMA_S3 <- c("ANG","C_C","EPS", "LV2")
+evaluations_HUMA_S3 <- list(
   ANG = c("DS2", "CC"),
   C_C = c("DS2"),
-  EPS = c("DS2")
-)
-
-poids_HUMANTC_S3 <- list(
-  ANG = c(1.5, 1.5),
-  C_C = c(1),
-  EPS = c(1)
-)
-
-dfs3_humatc <- generer_notes_automatique("HUMATC S3", EC_HUMATC_S3, evaluations_HUMATC_S3, poids_HUMANTC_S3)
-
-EC_HUMA_S3 <- c(dfs3_humatc$EC, "LV2")
-evaluations_HUMA_S3 <- list(
-  ANG = evaluations_HUMATC_S3$ANG,
-  C_C = evaluations_HUMATC_S3$C_C,
-  EPS = evaluations_HUMATC_S3$EPS,
+  EPS = c("DS2"),
   LV2 = c("DS2")
 )
 
 poids_HUMAN_S3 <- list(
+  ANG = c(1.5, 1.5),
+  C_C = c(1),
+  EPS = c(1),
   LV2 = c(1)
 )
 
@@ -169,7 +157,7 @@ poids_FONDA_S4 <- list(
 
 dfs4_fonda <- generer_notes_automatique("FONDA S4", EC_FONDA_S4, evaluations_FONDA_S4, poids_FONDA_S4)
 
-EC_EXP_S4 <- c("Chimie","Electro","Meca","Ondes","TP Phys","SI")
+EC_EXP_S4 <- c("Chimie","Electro","Meca","Ondes","TP_Phys","SI")
 evaluations_EXP_S4 <- list(
   Chimie = c("DS2", "TP"),
   Electro = c("DS2", "CC"),
@@ -205,30 +193,18 @@ poids_ORT_S4 <- list(
 
 dfs4_ort <- generer_notes_automatique("ORT S4", EC_ORT_S4, evaluations_ORT_S4, poids_ORT_S4)
 
-EC_HUMATC_S4 <- c("ANG","C&C","EPS")
-evaluations_HUMATC_S4 <-list(
+EC_HUMA_S4 <- c("ANG","C&C","EPS","LV2")
+evaluations_HUMA_S4 <- list(
   ANG = c("DS2", "CC"),
   C_C = c("DS2"),
-  EPS = c("DS2")
-)
-
-poids_HUMANTC_S4 <- list(
-  ANG = c(1.5, 1.5),
-  C_C = c(1),
-  EPS = c(1)
-)
-
-dfs4_humatc <- generer_notes_automatique("HUMATC S4", EC_HUMATC_S4, evaluations_HUMATC_S4, poids_HUMANTC_S4)
-
-EC_HUMA_S4 <- c(dfs4_humatc$EC, "LV2")
-evaluations_HUMA_S4 <- list(
-  ANG = evaluations_HUMATC_S4$ANG,
-  C_C = evaluations_HUMATC_S4$C_C,
-  EPS = evaluations_HUMATC_S4$EPS,
+  EPS = c("DS2"),
   LV2 = c("DS2")
 )
 
 poids_HUMAN_S4 <- list(
+  ANG = c(1.5, 1.5),
+  C_C = c(1),
+  EPS = c(1),
   LV2 = c(1)
 )
 
