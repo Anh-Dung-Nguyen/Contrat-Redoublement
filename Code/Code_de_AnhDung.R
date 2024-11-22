@@ -1,6 +1,6 @@
 library(dplyr)
 
-generer_notes_automatique <- function(UE, EC, evaluations, poids_evaluation) {
+generer_notes_automatique <- function(UE, EC, evaluations, poids_evaluation, ects) {
   result_list <- list()
 
   for (i in seq_along(EC)) {
@@ -15,6 +15,7 @@ generer_notes_automatique <- function(UE, EC, evaluations, poids_evaluation) {
         UE = UE,
         EC = EC[i],
         Moyenne = moyenne,
+        ECTS = ects[i],
         Validation = validation
       )
       df_temp <- cbind(df_temp, t(notes))
@@ -23,6 +24,7 @@ generer_notes_automatique <- function(UE, EC, evaluations, poids_evaluation) {
           UE = UE,
           EC = EC[i],
           Moyenne = NA,
+          ECTS = ects[i],
           Validation = "Non évalué"
         )
     }
@@ -38,8 +40,8 @@ compensation_intra_UE <- function(df){
   df <- df %>%
     group_by(UE) %>%
     mutate(
-      Moyenne_EC = mean(Moyenne, na.rm = TRUE),
-      Validation = ifelse(Moyenne_EC >= 10 & Validation == "Non valide", "ValideComp", Validation)
+      Moyenne_UE = sum(Moyenne * ECTS, na.rm = TRUE) / sum(ECTS[!is.na(Moyenne)], na.rm = TRUE),
+      Validation = ifelse(Moyenne_UE >= 10 & Validation == "Non valide", "ValideComp", Validation)
     ) %>%
     ungroup()
   return (df)
@@ -84,7 +86,9 @@ poids_FONDA_S3 <- list(
   MECA = c(1, 3, 1)
 )
 
-dfs3_fonda <- generer_notes_automatique("FONDA S3", EC_FONDA_S3, evaluations_FONDA_S3, poids_FONDA_S3)
+ECTS_FONDA_S3 <- c(2, 3, 2, 2)
+
+dfs3_fonda <- generer_notes_automatique("FONDA S3", EC_FONDA_S3, evaluations_FONDA_S3, poids_FONDA_S3, ECTS_FONDA_S3)
 
 EC_EXP_S3 <- c("ACSA","Chimie","Electro","TP_Phys","Thermo")
 evaluations_EXP_S3 <- list(
@@ -103,7 +107,9 @@ poids_EXP_S3 <- list(
   Thermo = c(1)
 )
 
-dfs3_exp <- generer_notes_automatique("EXP S3", EC_EXP_S3, evaluations_EXP_S3, poids_EXP_S3)
+ECTS_EXP_S3 = c(3, 3.5, 1.5, 1.5, 1.5)
+
+dfs3_exp <- generer_notes_automatique("EXP S3", EC_EXP_S3, evaluations_EXP_S3, poids_EXP_S3, ECTS_EXP_S3)
 
 EC_ORT_S3 <- c("ADS","PPI","RIE","Stage","TSE")
 evaluations_ORT_S3 <- list(
@@ -111,7 +117,7 @@ evaluations_ORT_S3 <- list(
   PPI = c(),
   RIE = c(),
   Stage = c("DS2"),
-  TSE = c()
+  TSE = c("DS2")
 )
 
 poids_ORT_S3 <- list(
@@ -119,10 +125,12 @@ poids_ORT_S3 <- list(
   PPI = c(),
   RIE = c(),
   Stage = c(1),
-  TSE = c()
+  TSE = c(1)
 )
 
-dfs3_ort <- generer_notes_automatique("ORT S3", EC_ORT_S3, evaluations_ORT_S3, poids_ORT_S3)
+ECTS_ORT_S3 = c(0, 0, 0, 4, 1)
+
+dfs3_ort <- generer_notes_automatique("ORT S3", EC_ORT_S3, evaluations_ORT_S3, poids_ORT_S3, ECTS_ORT_S3)
 
 EC_HUMA_S3 <- c("ANG","C_C","EPS", "LV2")
 evaluations_HUMA_S3 <- list(
@@ -139,7 +147,9 @@ poids_HUMAN_S3 <- list(
   LV2 = c(1)
 )
 
-dfs3_huma <- generer_notes_automatique("HUMA S3", EC_HUMA_S3, evaluations_HUMA_S3, poids_HUMAN_S3)
+ECTS_HUMAN_S3 = c(1.5, 1.5, 1, 1)
+
+dfs3_huma <- generer_notes_automatique("HUMA S3", EC_HUMA_S3, evaluations_HUMA_S3, poids_HUMAN_S3, ECTS_HUMAN_S3)
 
 # EC pour S4
 EC_FONDA_S4 <- c("Geometrie","INFO","PROBA")
@@ -155,7 +165,9 @@ poids_FONDA_S4 <- list(
   PROBA = c(1.5, 1.5)
 )
 
-dfs4_fonda <- generer_notes_automatique("FONDA S4", EC_FONDA_S4, evaluations_FONDA_S4, poids_FONDA_S4)
+ECTS_FONDA_S4 <- c(3.5, 3, 3.5)
+
+dfs4_fonda <- generer_notes_automatique("FONDA S4", EC_FONDA_S4, evaluations_FONDA_S4, poids_FONDA_S4, ECTS_FONDA_S4)
 
 EC_EXP_S4 <- c("Chimie","Electro","Meca","Ondes","TP_Phys","SI")
 evaluations_EXP_S4 <- list(
@@ -176,22 +188,26 @@ poids_EXP_S4 <- list(
   SI = c(1)
 )
 
-dfs4_exp <- generer_notes_automatique("EXP S4", EC_EXP_S4, evaluations_EXP_S4, poids_EXP_S4)
+ECTS_EXP_S4 <- c(3.5, 2, 2, 2, 1.5, 1)
+
+dfs4_exp <- generer_notes_automatique("EXP S4", EC_EXP_S4, evaluations_EXP_S4, poids_EXP_S4, ECTS_EXP_S4)
 
 EC_ORT_S4 <- c("PPI","RIE","TSE")
 evaluations_ORT_S4 <- list(
-  PPI = c("DS2"),
-  RIE = c(),
+  PPI = c(),
+  RIE = c("DS2"),
   TSE = c()
 )
 
 poids_ORT_S4 <- list(
-  PPI = c(1),
-  RIE = c(),
+  PPI = c(),
+  RIE = c(1),
   TSE = c()
 )
 
-dfs4_ort <- generer_notes_automatique("ORT S4", EC_ORT_S4, evaluations_ORT_S4, poids_ORT_S4)
+ECTS_ORT_S4 = c(0, 1, 0)
+
+dfs4_ort <- generer_notes_automatique("ORT S4", EC_ORT_S4, evaluations_ORT_S4, poids_ORT_S4, ECTS_ORT_S4)
 
 EC_HUMA_S4 <- c("ANG","C&C","EPS","LV2")
 evaluations_HUMA_S4 <- list(
@@ -208,7 +224,9 @@ poids_HUMAN_S4 <- list(
   LV2 = c(1)
 )
 
-dfs4_huma <- generer_notes_automatique("HUMA S4", EC_HUMA_S4, evaluations_HUMA_S4, poids_HUMAN_S4)
+ECTS_HUMAN_S4 = c(1.5, 1.5, 1, 1)
+
+dfs4_huma <- generer_notes_automatique("HUMA S4", EC_HUMA_S4, evaluations_HUMA_S4, poids_HUMAN_S4, ECTS_HUMAN_S4)
 
 # Affichage des dataframes
 dfs3 <- bind_rows(dfs3_fonda, dfs3_exp, dfs3_ort, dfs3_huma)
