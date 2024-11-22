@@ -1,16 +1,29 @@
 library(dplyr)
 
+# UE -> Nom de l'Unité d'Enseignement
+# EC -> Vecteur contenant les noms des Elements Constitutifs de l'UE
+# evaluations -> Liste des évaluation disponibles pour chaque UE comme DS1, DS2, CC
+# poids_evaluation -> liste des coefficients aux chaque évaluation de chaque EC
+# ects -> Vecteur contenant les crédits ECTS de chaque EC
 generer_notes_automatique <- function(UE, EC, evaluations, poids_evaluation, ects) {
+  # result_list -> stocker les données relatives à chaque EC
   result_list <- list()
 
+  # parcours de chaque EC
   for (i in seq_along(EC)) {
+    # récupérer des évaluations disponibles et leurs poids
     eval_dispo <- evaluations[[EC[i]]]
     poids_dispo <- poids_evaluation[[EC[i]]]
 
+    # Si des évaluations disponibles
     if (length(eval_dispo) > 0){
+      # générer de notes aléatoires comprises entre 0 et 20 à l'aide de sapply()
       notes <- sapply(eval_dispo, function(x) sample(0:20, 1))
+      # calcul de la moyenne pondérée
       moyenne <- sum(notes * poids_dispo) / sum(poids_dispo)
+      # déterminer de la validation
       validation <- ifelse(moyenne >= 10, "Valide", "Non valide")
+      # créer un df temporaire avec des colonnes suivantes: UE, EC, Moyenne, ECTS, Validation
       df_temp <- data.frame(
         UE = UE,
         EC = EC[i],
@@ -18,6 +31,7 @@ generer_notes_automatique <- function(UE, EC, evaluations, poids_evaluation, ect
         ECTS = ects[i],
         Validation = validation
       )
+      # concaténation des résultats en un df unique avec cbind
       df_temp <- cbind(df_temp, t(notes))
     } else {
         df_temp <- data.frame(
@@ -29,17 +43,24 @@ generer_notes_automatique <- function(UE, EC, evaluations, poids_evaluation, ect
         )
     }
 
+    # ajouter le df_temp à la liste result_list
     result_list[[i]] <- df_temp
   }
 
+  # combiner en un seul tableau
   df_final <- bind_rows(result_list)
   return (df_final)
 }
 
+# df -> un tableau avec les colonnes: UE, Moyenne, ECTS, Validation
 compensation_intra_UE <- function(df){
+  # regrouper par UE
   df <- df %>%
     group_by(UE) %>%
+    # mutate -> créer des nouvelles colonnes
     mutate(
+      # na.rm ici pour remplacer des valeurs NA par 0
+      # ECTS[!is.na(Moyenne) -> tenir compte seulement avec des valeurs ECTS où la valeur moyenne n'est pas NA
       Moyenne_UE = sum(Moyenne * ECTS, na.rm = TRUE) / sum(ECTS[!is.na(Moyenne)], na.rm = TRUE),
       Validation = ifelse(Moyenne_UE >= 10 & Validation == "Non valide", "ValideComp", Validation)
     ) %>%
@@ -48,6 +69,7 @@ compensation_intra_UE <- function(df){
 }
 
 compensation_inter_UE <- function(df, ue_scientifique){
+  # isoler les lignes correspondant aux UE scientifiques spécifiées dans ue_scientifique
   df_scientifique <- df %>% filter(UE %in% ue_scientifique)
 
   moyenne_ponderee_ue <- df_scientifique %>%
@@ -59,6 +81,7 @@ compensation_inter_UE <- function(df, ue_scientifique){
     summarise(
       Moyenne_globale = mean(Moyenne_UE, na.rm = TRUE)
     ) %>%
+    # extraction la valeur de moyenne globale
     pull(Moyenne_globale)
 
   if(moyenne_ponderee_ue >= 10){
@@ -140,16 +163,16 @@ evaluations_HUMA_S3 <- list(
   LV2 = c("DS2")
 )
 
-poids_HUMAN_S3 <- list(
+poids_HUMA_S3 <- list(
   ANGL = c(1.5, 1.5),
   COMM = c(1),
   EPS = c(1),
   LV2 = c(1)
 )
 
-ECTS_HUMAN_S3 = c(1.5, 1.5, 1, 1)
+ECTS_HUMA_S3 = c(1.5, 1.5, 1, 1)
 
-dfs3_huma <- generer_notes_automatique("HUMA S3", EC_HUMA_S3, evaluations_HUMA_S3, poids_HUMAN_S3, ECTS_HUMAN_S3)
+dfs3_huma <- generer_notes_automatique("HUMA S3", EC_HUMA_S3, evaluations_HUMA_S3, poids_HUMA_S3, ECTS_HUMA_S3)
 
 # EC pour S4
 EC_FONDA_S4 <- c("GEOM","INFO","PROBA")
@@ -205,7 +228,7 @@ poids_ORT_S4 <- list(
   TSE = c()
 )
 
-ECTS_ORT_S4 = c(0, 1, 0)
+ECTS_ORT_S4 = c(1, 1, 0)
 
 dfs4_ort <- generer_notes_automatique("ORT S4", EC_ORT_S4, evaluations_ORT_S4, poids_ORT_S4, ECTS_ORT_S4)
 
@@ -217,16 +240,16 @@ evaluations_HUMA_S4 <- list(
   LV2 = c("DS2")
 )
 
-poids_HUMAN_S4 <- list(
-  ANG = c(1.5, 1.5),
-  C_C = c(1),
+poids_HUMA_S4 <- list(
+  ANGL = c(1.5, 1.5),
+  COMM = c(1),
   EPS = c(1),
   LV2 = c(1)
 )
 
-ECTS_HUMAN_S4 = c(1.5, 1.5, 1, 1)
+ECTS_HUMA_S4 = c(1.5, 1.5, 1, 1)
 
-dfs4_huma <- generer_notes_automatique("HUMA S4", EC_HUMA_S4, evaluations_HUMA_S4, poids_HUMAN_S4, ECTS_HUMAN_S4)
+dfs4_huma <- generer_notes_automatique("HUMA S4", EC_HUMA_S4, evaluations_HUMA_S4, poids_HUMA_S4, ECTS_HUMA_S4)
 
 # Affichage des dataframes
 dfs3 <- bind_rows(dfs3_fonda, dfs3_exp, dfs3_ort, dfs3_huma)
