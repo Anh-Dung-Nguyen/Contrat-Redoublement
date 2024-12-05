@@ -158,7 +158,7 @@ lesNotesEC_EXPS4 <- list(
 
 poids_EXP_S4 <- list(
   CHIM = c(2, 1),
-  ELGM = c(2, 1),
+  ELMG = c(2, 1),
   MECA = c(1, 1),
   ONDE = c(1),
   PHYS = c(1),
