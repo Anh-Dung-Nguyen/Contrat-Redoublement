@@ -8,7 +8,6 @@ library(flextable)
 library(readxl)
 
 print(format(Sys.Date(), "%Y"))
-nb_EC_S3 <- length(lesEC_EXPS3) + length(lesEC_FONDAS3) + length(lesEC_ORTS3) + length(lesEC_HUMA_S3) + length(lesEC_Stage)
 
 # création d'un nouvel objet de document Word
 doc <- read_docx()
@@ -55,7 +54,7 @@ sign <- sign %>%
   bold(part = "header")%>%
   set_header_labels(
     c1 = "Signature de l'étudiant.e précédée de la mention «lu et approuvé»",
-    c2 = "Signature de la Directrice du Département : Carole Daiguebonne",
+    c2 = direction_departement,
     c3 = "Cachet de l'établissement"
   )%>%
   width(j = c(1,2,3), width = c(2.5,2.5,2.5))%>%
