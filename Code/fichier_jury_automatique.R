@@ -64,6 +64,30 @@ for (i in seq_along(lesUE)) {
     writeData(wb, "S3", details[k], startCol = startCol + k - 1, startRow = rowDetails, colNames = FALSE)
   }
   
+  if ("ECTS" %in% details){
+    col_ECTS <- which(details == "ECTS")
+    writeData(wb, "S3", resultat_liste$ECTS[i - 1], startCol = startCol + col_ECTS - 1, startRow = 4, colNames =  FALSE)
+  }
+  
+  if ("Note" %in% details){
+    col_Note <- which(details == "Note")
+    writeData(wb, "S3", resultat_liste$Moyenne_UE[i - 1], startCol = startCol + col_Note - 1, startRow =  4, colNames = FALSE)
+  }
+  
+  if ("Résultat" %in% details){
+    col_Resultat <- which(details == "Résultat")
+    writeData(wb, "S3", resultat_liste$Validation_UE[i - 1], startCol = startCol + col_Resultat - 1, startRow = 4, colNames = FALSE)
+  }
+  
+  for (ec1 in details){
+    if (ec1 %in% resultat_liste$EC){
+      col_EC <- which(details == ec1)
+      indices <- which(resultat_liste$EC == ec1)
+      moyennes <- resultat_liste$Moyenne[indices]
+      writeData(wb, "S3", moyennes, startCol = startCol + col_EC - 1, startRow = 4, colNames =  FALSE)
+    }
+  }
+  
   # Mise à jour de la position de la colonne de départ
   startCol <- startCol + numCols
 }
@@ -94,6 +118,6 @@ addStyle(wb, "S3", border_style, rows = 1:28, cols = 1:38, gridExpand = TRUE)
 setColWidths(wb, "S3", cols = 1:38, widths = 10)
 
 # Sauvegarder le fichier Excel
-saveWorkbook(wb, "tableau_structure_optimise.xlsx", overwrite = TRUE)
+saveWorkbook(wb, "fichier_jury.xlsx", overwrite = TRUE)
 
-print("Fichier Excel optimisé créé : tableau_structure_optimise.xlsx")
+print("Fichier Excel créé : fichier_jury.xlsx")
