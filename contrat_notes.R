@@ -7,11 +7,6 @@ library(dplyr)
 library(flextable)
 library(readxl)
 
-annee_plus_un <- as.numeric(format(Sys.Date(), "%Y")) + 1
-annee_moins_un <- as.numeric(format(Sys.Date(), "%Y")) - 1
-annee_courante <- as.numeric(format(Sys.Date(), "%Y"))
-
-
 # création d'un nouvel objet de document Word
 doc <- read_docx()
 
@@ -27,10 +22,32 @@ toutes_notes_S4 <- read_excel(fichier_jury, sheet = 3, col_types = "text")
 notes_S3 <- toutes_notes_S3[toutes_notes_S3[[1]] == "Nom1" & toutes_notes_S3[[2]] == "Prenom1", c(6:10, 14:17, 21:25, 29:32)]
 notes_S4 <- toutes_notes_S4[toutes_notes_S4[[1]] == "Nom1" & toutes_notes_S4[[2]] == "Prenom1", c(6:11, 15:17, 21:23, 27:30)]
 
-#pour extraire les valeurs et les filtrer pour ne garder que les non-NA
+#pour extraire les valeurs des notes
 valeurs_notes_S3 <- unlist(notes_S3[rowSums(is.na(notes_S3)) != ncol(notes_S3), ])
 valeurs_notes_S4 <- unlist(notes_S4[rowSums(is.na(notes_S4)) != ncol(notes_S4), ])
 
+#pour mettre des croix si l'EC n'est pas validé ou n'a pas de note
+croix_S3 <- c()
+i <- 1
+for (note in valeurs_notes_S3){
+  if (as.integer(note) < 10 || is.na(as.integer(note))){
+    croix_S3[i] <- "X"
+  }else{
+    croix_S3[i] <- ""
+  }
+  i = i+1
+}
+
+croix_S4 <- c()
+i <- 1
+for (note in valeurs_notes_S4){
+  if (as.integer(note) < 10 || is.na(as.integer(note))){
+    croix_S4[i] <- "X"
+  }else{
+    croix_S4[i] <- ""
+  }
+  i = i+1
+}
 
 # création des tableaux de données
 data <- data.frame(
@@ -39,7 +56,7 @@ data <- data.frame(
   LesUE[3],
   Moyennes = c(valeurs_notes_S3,valeurs_notes_S4),
   EcValRepasse = c(rep("",34)),
-  EcAVal = c(rep("",34))
+  EcAVal = c(croix_S3, croix_S4)
   )
 
 signature <- data.frame(
