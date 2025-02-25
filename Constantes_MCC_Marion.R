@@ -1,6 +1,8 @@
 lesUE<-c("Sciences Fondamentales","Sciences Expérimentales","Orientation et Transition","Humanités", "Stage" )
 
-tableau_lesUE<-data.frame(ListDeUE=lesUE)
+direction_departement <- "Signature de la Directrice du département : Carole Daiguebonne"
+
+
 
 # -----------------   definition des constantes pour l'UE Sciences Fondamentales ----------------
 
@@ -169,10 +171,10 @@ tableauEC_SORT4<-cbind(tableauNomUE_ORT4,tableauEC_SORT41,dataframenotesECTSORTS
 
 # -----------------   defintion des constantes pour l'UE HUMA ----------------
 
-lesEC_HUMA_S3<-c("Anglais 3","Culture et Communication 3 / FLE Comm","EPS 3","Module à choix S3 (LV2-FLE)")
-lesCodes_HUMAS3<-c("EC-STP03-ANGL","EC-STP03-COMM / EC-STP03-FLE-COMM","EC-STP03-EPS","EC-STP03-LV2 / EC-STP03-FLE")
-lesEC_HUMA_S4<- c("Anglais 4","Culture et Communication 4 / FLE Comm","EPS 4","Module à choix S4 (LV2-FLE)")
-lesCodes_HUMAS4<-c("EC-STP04-ANGL","EC-STP04-COMM / EC-STP04-FLE-COMM","EC-STP04-EPS","EC-STP04-LV2 / EC-STP04-FLE")
+lesEC_HUMA_S3<-c("Anglais 3","Culture et Communication 3\nFLE Comm","EPS 3","Module à choix S3 (LV2-FLE)")
+lesCodes_HUMAS3<-c("EC-STP03-ANGL","EC-STP03-COMM\nEC-STP03-FLE-COMM","EC-STP03-EPS","EC-STP03-LV2\nEC-STP03-FLE")
+lesEC_HUMA_S4<- c("Anglais 4","Culture et Communication 4\nFLE Comm","EPS 4","Module à choix S4 (LV2-FLE)")
+lesCodes_HUMAS4<-c("EC-STP04-ANGL","EC-STP04-COMM\nEC-STP04-FLE-COMM","EC-STP04-EPS","EC-STP04-LV2\nEC-STP04-FLE")
 lesTypeEC_HUMA_TC<-c("Note","Note","Note","Note")
 #définition commune puisque même notation pour les matières dans les 2 semestres
 lesNotesEC_HUMA <- list(
@@ -251,4 +253,5 @@ colNotesOPTS4<-c(3)
 coefOPTS4<-c(1)
 
 # -----------------   defintion des constantes globales ----------------
-LesUE<-rbind(tableauEC_Fonda3,tableauEC_EXP3,tableauEC_HUMA3,tableauEC_SORT3,tableauEC_Stage3,tableauEC_Fonda4,tableauEC_EXP4,tableauEC_HUMA4,tableauEC_SORT4)
+LesUE<-rbind(tableauEC_EXP3,tableauEC_Fonda3,tableauEC_SORT3, tableauEC_HUMA3,tableauEC_Stage3,tableauEC_EXP4,tableauEC_Fonda4,tableauEC_SORT4, tableauEC_HUMA4)
+nb_EC_S3 <- length(lesEC_EXPS3) + length(lesEC_FONDAS3) + length(lesEC_ORTS3) + length(lesEC_HUMA_S3) + length(lesEC_Stage)
