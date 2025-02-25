@@ -7,35 +7,17 @@ library(dplyr)
 library(flextable)
 library(readxl)
 
-print(format(Sys.Date(), "%Y"))
-nb_EC_S3 <- length(lesEC_EXPS3) + length(lesEC_FONDAS3) + length(lesEC_ORTS3) + length(lesEC_HUMA_S3) + length(lesEC_Stage)
-
 # création d'un nouvel objet de document Word
 doc <- read_docx()
 
-
-#récupération du fichier de jury avec les moyennes de tous les élèves pour chaque EC
-fichier_jury <- "~/Bureau/3A/EP/jury.xlsx"
-
-#pour lire les données de la 2ème feuille de fichier exel
-toutes_notes_S3 <- read_excel(fichier_jury, sheet = 2)
-
-#pour récupérer la ligne correspondant à l'élève dont on veut créer le contrat
-notes_S3 <- toutes_notes_S3[toutes_notes_S3[[1]] == "Nom1" & toutes_notes_S3[[2]] == "Prenom1", c(6:10, 14:17, 21:25, 29:32)]
-
-#pour extraire les valeurs et les filtrer pour ne garder que les non-NA
-valeurs_notes_S3 <- unlist(notes_S3)
-val_notes_S3_sans_NA <- valeurs_notes_S3[!is.na(valeurs_notes_S3)]
-
-
 # création des tableaux de données
 data <- data.frame(
-  Ue = c(rep(lesUE[1],length(lesEC_FONDAS3)), rep(lesUE[2],length(lesEC_EXPS3)), rep(lesUE[3],length(lesEC_ORTS3)), rep(lesUE[4],length(lesEC_HUMA_S3)), lesUE[5],rep(lesUE[1],length(lesEC_FONDAS4)), rep(lesUE[2],length(lesEC_EXPS4)), rep(lesUE[3],length(lesEC_ORTS4)), rep(lesUE[4],length(lesEC_HUMA_S4))),
-  Ec = c(lesEC_FONDAS3, lesEC_EXPS3, lesEC_ORTS3, lesEC_HUMA_S3, lesEC_Stage, lesEC_FONDAS4, lesEC_EXPS4, lesEC_ORTS4, lesEC_HUMA_S4),
-  CodeEC = c(lesCodes_FONDAS3, lesCodes_EXPS3, lesCodes_ORTS3, lesCodes_HUMAS3, lesCodes_Stage, lesCodes_FONDAS4, lesCodes_EXPS4, lesCodes_ORTS4, lesCodes_HUMAS4),
-  Moyennes = c(val_notes_S3_sans_NA,rep("",16)),
-  EcValRepasse = c(rep("",34)),
-  EcAVal = c(rep("",34))
+  LesUE[1],
+  LesUE[2],
+  LesUE[3],
+  Moyennes = c(rep("",length(LesUE[1]))),
+  EcValRepasse = c(rep("",length(LesUE[1]))),
+  EcAVal = c(rep("",length(LesUE[1])))
   )
 
 signature <- data.frame(
@@ -59,7 +41,9 @@ sign <- sign %>%
     c3 = "Cachet de l'établissement"
   )%>%
   width(j = c(1,2,3), width = c(2.5,2.5,2.5))%>%
-  border_outer(border = fp_border(color = "black", width = 1, style = "solid"))
+  border_outer(border = fp_border(color = "black", width = 1, style = "solid")) %>%
+  border_inner_h(border = fp_border(color = "grey", width = 0.5, style = "solid")) %>%
+  border_inner_v(border = fp_border(color = "grey", width = 0.5, style = "solid"))
 
 
 #flextable avec ue, ec, code EC, moyenne, à repasser, à valider
@@ -92,6 +76,10 @@ ft <- ft %>%
   #pour mettre les bords en gras
   border_outer(border = fp_border(color = "black", width = 1, style = "solid"))%>%
   
+  #pour mettre les lignes horizontales et verticales en gris pour pouvoir les visialiser sur document imprimé
+  border_inner_h(border = fp_border(color = "grey", width = 0.5, style = "solid")) %>%
+  border_inner_v(border = fp_border(color = "grey", width = 0.5, style = "solid")) %>%
+  
   #pour mettre la ligne horizontale qui sépare le S3 du S4 en gras
   hline(i = nb_EC_S3, border = fp_border(width = 1.5, color = "black"))
 
@@ -123,4 +111,4 @@ doc <- doc %>%
 
 
 #pour sauvegarder le document
-print(doc, target = "gene_contrat_vierge.docx")
+print(doc, target = "contrat_vierge.docx")
