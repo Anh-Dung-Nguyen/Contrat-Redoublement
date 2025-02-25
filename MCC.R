@@ -1,9 +1,5 @@
 lesUE<-c("Sciences Fondamentales","Sciences Expérimentales","Orientation et Transition","Humanités", "Stage" )
 
-direction_departement <- "Signature de la Directrice du département : Carole Daiguebonne"
-
-
-
 # -----------------   definition des constantes pour l'UE Sciences Fondamentales ----------------
 
 
@@ -254,4 +250,7 @@ coefOPTS4<-c(1)
 
 # -----------------   defintion des constantes globales ----------------
 LesUE<-rbind(tableauEC_EXP3,tableauEC_Fonda3,tableauEC_SORT3, tableauEC_HUMA3,tableauEC_Stage3,tableauEC_EXP4,tableauEC_Fonda4,tableauEC_SORT4, tableauEC_HUMA4)
+
+# Utiles à la création du contrat
 nb_EC_S3 <- length(lesEC_EXPS3) + length(lesEC_FONDAS3) + length(lesEC_ORTS3) + length(lesEC_HUMA_S3) + length(lesEC_Stage)
+direction_departement <- "Signature de la Directrice du département : Carole Daiguebonne"
