@@ -245,7 +245,7 @@ poids_HUMA_S4 <- list(
   ANGL = c(1.5, 1.5),
   COMM = c(1),
   EPS = c(1),
-  LV2 = c(1)
+  LV2 = c(1,1)
 )
 
 resultat_HUMA_S4 <- generer_notes_automatique("HUMA S4", lesEC_HUMA_TC, lesNotesEC_HUMA, poids_HUMA_S4, lesECTSHUMAS4)
