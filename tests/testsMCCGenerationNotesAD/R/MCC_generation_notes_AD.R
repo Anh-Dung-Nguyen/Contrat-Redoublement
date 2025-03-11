@@ -12,7 +12,6 @@ generer_notes_automatique <- function(UE, EC, evaluations, poids_evaluation, ect
   for (i in seq_along(EC)) {
     eval_dispo <- evaluations[[EC[i]]]
     poids_dispo <- poids_evaluation[[EC[i]]]
-
     eval_dispo <- eval_dispo[!is.na(eval_dispo)]
     poids_dispo <- poids_dispo[!is.na(poids_dispo)]
 
@@ -246,7 +245,7 @@ poids_HUMA_S4 <- list(
   ANGL = c(1.5, 1.5),
   COMM = c(1),
   EPS = c(1),
-  LV2 = c(1,1)
+  LV2 = c(1)
 )
 
 resultat_HUMA_S4 <- generer_notes_automatique("HUMA S4", lesEC_HUMA_TC, lesNotesEC_HUMA, poids_HUMA_S4, lesECTSHUMAS4)
