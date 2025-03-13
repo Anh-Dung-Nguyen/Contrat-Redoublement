@@ -45,7 +45,7 @@ croix_S3 <- croix(notes_S3)
 croix_S4 <- croix(notes_S4)
 
 # création des tableaux de données
-data <- data.frame(
+notes_etudiant <- data.frame(
   LesUE[1],
   LesUE[2],
   LesUE[3],
@@ -61,7 +61,7 @@ signature <- data.frame(
 )
 
 #création des flextable
-ft <- flextable(data)
+ft <- flextable(notes_etudiant)
 sign <- flextable(signature)
 
 
@@ -95,22 +95,16 @@ ft <- ft %>%
   )%>%
   
   # concaténation de lignes pour avoir 1 case par UE
-  merge_at(i = 1:nb_EC_UE_S3[1], j = 1) %>%
-  merge_at(i = nb_EC_UE_S3[1]+1:nb_EC_UE_S3[1], j = 1) %>%
-  # je comprends pas : 
-# > nb_EC_UE_S3[1]+1:nb_EC_UE_S3[2]
-#   [1]  6  7  8  9 10 11 12 13 14
-# > nb_EC_UE_S3[1]+1:nb_EC_UE_S3[1]
-#   [1]  6  7  8  9 10
+  merge_at(i = 1:nb_EC_UE[1], j = 1) %>%
+  merge_at(i = (nb_EC_UE[1]+1):nb_EC_UE[2], j = 1) %>%
+  merge_at(i = (nb_EC_UE[2]+1):nb_EC_UE[3], j = 1) %>%
+  merge_at(i = (nb_EC_UE[3]+1):nb_EC_UE[4], j = 1) %>%
+  merge_at(i = (nb_EC_UE[4]+1):nb_EC_UE[5], j = 1) %>%
+  merge_at(i = (nb_EC_UE[5]+1):nb_EC_UE[6], j = 1) %>%
+  merge_at(i = (nb_EC_UE[6]+1):nb_EC_UE[7], j = 1) %>%
+  merge_at(i = (nb_EC_UE[7]+1):nb_EC_UE[8], j = 1) %>%
+  merge_at(i = (nb_EC_UE[7]+1):nb_EC_UE[8], j = 1) %>%
   
-  #merge_at(i = nb_EC_UE_S3[2]+1:nb_EC_UE_S3[3], j = 1) %>%
-  # merge_at(i = nb_EC_UE_S3[3]+1:nb_EC_UE_S3[4], j = 1) %>%
-  # 
-  # merge_at(i = nb_EC_UE_S3[5]+1:nb_EC_UE_S4[1], j = 1) %>%
-  # merge_at(i = nb_EC_UE_S4[1]+1:nb_EC_UE_S4[2], j = 1) %>%
-  # merge_at(i = nb_EC_UE_S4[2]+1:nb_EC_UE_S4[3], j = 1) %>%
-  # merge_at(i = nb_EC_UE_S4[3]+1:nb_EC_UE_S4[4], j = 1) %>%
-
   # choix de la largeur des colonnes
   width(j = c(1,2,3,4,5), width = c(1.5,1.7,1.5,1,1))%>%
   
