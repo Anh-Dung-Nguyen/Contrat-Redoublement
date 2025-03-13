@@ -147,4 +147,4 @@ doc <- doc %>%
 
 
 # pour sauvegarder le document
-print(doc, target = "~/Bureau/3A/EP_perso/contrat_notes_6_mars.docx")
+print(doc, target = "./contrat_notes_6_mars.docx")
