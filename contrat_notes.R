@@ -59,7 +59,6 @@ croix <- function(notes){
 # solution on peut facilement ajouter des colonnes a un dataframe dans un for
 # cf dernier tp de proba
 
-# XXXX en faire une petite fonction : build_notes_etudiant
 # création des tableaux de données
 build_notes_etudiant <- function(notes_S3, notes_S4, croix_S3, croix_S4){
   return(
@@ -73,7 +72,6 @@ build_notes_etudiant <- function(notes_S3, notes_S4, croix_S3, croix_S4){
     ))
 }
 
-# ideme : petite fonction build_signature
 build_signature <- function(){
   return(
     signature <- data.frame(
@@ -120,7 +118,6 @@ build_ft_notes <- function(ft){
       )%>%
       
       # XXXXX
-      # ok nb_EC_UE defini dans MCC
       # par contre meme chose le 7 doit etre déduit des constantes du MCC et il 
       # faudrait une boucle pour que ton code soit adaptable a tout changement
       # du fichier MCC
