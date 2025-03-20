@@ -74,7 +74,7 @@ build_notes_etudiant <- function(notes_S3, notes_S4, croix_S3, croix_S4){
 
 build_signature <- function(){
   return(
-    signature <- data.frame(
+      data.frame(
       c1 = c("Date :\n\n\n\n\n"),
       c2 = c("Date :\n\n\n\n\n"),
       c3 = c("\n\n\n\n\n ")
@@ -185,9 +185,9 @@ ecriture <- function(ft_notes, ft_sign){
 }
 
 
-
+### séparer génération dataframe et génération du doc
 #génération du contrat
-generation <- function(nom, prenom, doc){
+generation_df <- function(nom, prenom){
   
   # récupération du fichier jury
   fichier_jury <- "./jury.xlsx"
@@ -201,18 +201,22 @@ generation <- function(nom, prenom, doc){
   croix_S4 <- croix(notes_S4)
   
   #création des dataframes
-  notes_etudiant <- build_notes_etudiant(notes_S3, notes_S4, croix_S3, croix_S4)
-  signature <- build_signature()
-  
-  #création des flextable
-  ft_notes <- flextable(notes_etudiant)
-  ft_sign <- flextable(signature)
-  
-  ft_notes <- build_ft_notes(ft_notes)
-  ft_sign <- build_ft_signature(ft_sign)
-  
-  doc <- ecriture(ft_notes, ft_sign)
+  notes_etudiant <<- build_notes_etudiant(notes_S3, notes_S4, croix_S3, croix_S4)
+  print(notes_etudiant)
+  return (notes_etudiant)
 }
+
+
+#signature <- build_signature()
+
+#création des flextable
+#ft_notes <- flextable(notes_etudiant)
+#ft_sign <- flextable(signature)
+
+#ft_notes <- build_ft_notes(ft_notes)
+#ft_sign <- build_ft_signature(ft_sign)
+
+#doc <- ecriture(ft_notes, ft_sign)
 
 
 
@@ -220,7 +224,7 @@ generation <- function(nom, prenom, doc){
 doc <- read_docx()
 
 #génération du contrat
-generation("Nom1","Prenom1",doc)
+#generation("Nom1","Prenom1")
 
 # pour sauvegarder le document
 print(doc, target = "./contrat_notes_19_mars.docx")

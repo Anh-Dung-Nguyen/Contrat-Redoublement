@@ -2,6 +2,7 @@ library(shiny)
 library(ggplot2)
 library(dplyr)
 library(readxl)
+library(DT)
 
 ui <- fluidPage(
   titlePanel("Génération des contrats de redoublants"), 
@@ -15,7 +16,7 @@ ui <- fluidPage(
     ),
     mainPanel(
       textOutput("text"),
-      tableOutput("table")
+      DTOutput("table_notes")
     )
   )
 )
