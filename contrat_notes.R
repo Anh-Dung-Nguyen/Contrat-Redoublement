@@ -7,6 +7,7 @@ library(dplyr)
 library(flextable)
 library(readxl)
 
+
 # j'ai ajoute cette ligne pour que le fichier MCC soit chargé, si vous avez
 # decomposé votre code avec server, ui, global, il suffit de la mettre dans
 # global.R
@@ -16,48 +17,49 @@ source("MCC.R")
 
 
 # renvoie les notes de l'élève nom prenom du semestre associé à la feuille de l'excel fichier
-# XXXX ne faudrait il pas aussi recuperer les validations des différentes UE ?
 notes_from_jury <- function(fichier, feuille, colonnes, nom, prenom){
   semestre <- read_excel(fichier, sheet = feuille, col_types = "text")
   notes <- semestre[semestre[[1]] == nom & semestre[[2]] == prenom, colonnes]
   return(unlist(notes[rowSums(is.na(notes)) != ncol(notes), ]))
 }
 
+#renvoie les validations ou non de chaque UE pour un semestre
+valide_UE <- function(fichier, feuille, col_val, nom, prenom){
+  semestre <- read_excel(fichier, sheet = feuille, col_types = "text")
+  validations <- semestre[semestre[[1]] == nom & semestre[[2]] == prenom, col_val]
+  return(unlist(validations[rowSums(is.na(validations)) != ncol(validations), ]))
+}
+
+##### comment c'est écrit quand l'EC est en validation?? majusucle, minuscule?
 # renvoie un vecteur contenant des croix si l'ec n'est pas validé
-# XXXX
-# attentin j'ai l'impression que vous n'avez pas traité les matieres qui 
-# sont sans note mais uniquement avec validation
-# XXXX
-
-
-croix <- function(notes){
+croix <- function(notes,validation){
   croix <- c()
   i <- 1
-  for (note in notes){
-    if (as.integer(note) < 10 || is.na(as.integer(note))){ 
-      #il faut aussi gérer si c'est en validation ms jsp comment c'est écrit dans le tableur
-      # XXXXX
-      # c'est simple dans ta feuille, il y a une premiere colonne appelee "Résultat"
-      # si la valeur dans cette colonne est VALIDE ou "VALID COMP" alors toutes les 
-      # EC de l'UE sont validées sinon il faut regarder la ntoe de chaque EC
-      # XXXXXX
-      croix[i] <- "X"
+  for (j in 1:length(validation)){
+    if (j==5){ #pour gérer le stage comme j'ai pas le bon fichier jury donc pas de résultat pour l'UE
+      croix[i] <- "pb"
+      i <- i+1
+    } else{
+    if (validation[j] == "NON VALIDE"){
+      while(i <= nb_EC_UE[j]){
+        if (as.integer(notes[i]) < 10 || is.na(as.integer(notes[i]))){
+          croix[i] <- "X"
+        }else{
+          croix[i] <- ""
+        }
+        i = i+1
+      }
     }else{
-      croix[i] <- ""
+      while(i <= nb_EC_UE[j]){
+        croix[i] <- ""
+        i = i+1
+      }
     }
-    i = i+1
+    }
   }
   return(croix)
 }
 
-# JE VOIS PAS OU C'EST, LesUE[1] corresponds à la colonne contenant toutes les UES, 
-#LesUE[2] contient les EC, LesUE[3] contient les codes des EC
-
-# attention ici tu as end ure le fait d'avoir 3 UE
-# il faut que ceci s'adapte automtaquement en fonction du fichier MCC
-# d'ailleurs pour le MCC de cette année, il y a 4 UE
-# solution on peut facilement ajouter des colonnes a un dataframe dans un for
-# cf dernier tp de proba
 
 # création des tableaux de données
 build_notes_etudiant <- function(notes_S3, notes_S4, croix_S3, croix_S4){
@@ -187,7 +189,7 @@ ecriture <- function(ft_notes, ft_sign){
 
 ### séparer génération dataframe et génération du doc
 #génération du contrat
-generation_df <- function(nom, prenom){
+generation <- function(nom, prenom, doc){
   
   # récupération du fichier jury
   fichier_jury <- "/home/yaelle/Bureau/3A/EP_perso/jury.xlsx"
@@ -196,27 +198,33 @@ generation_df <- function(nom, prenom){
   notes_S3 <- notes_from_jury(fichier_jury, 2, col_S3, nom, prenom)
   notes_S4 <- notes_from_jury(fichier_jury, 3, col_S4, nom, prenom)
   
+  #récupération des validations des UE de l'étudiant·e
+  val_S3 <- valide_UE(fichier_jury, 2, col_val_S3, nom, prenom)
+  val_S4 <- valide_UE(fichier_jury, 3, col_val_S4, nom, prenom)
+  
   #pour mettre des croix si l'EC n'est pas validé ou n'a pas de note
-  croix_S3 <- croix(notes_S3)
-  croix_S4 <- croix(notes_S4)
+  croix_S3 <- croix(notes_S3, val_S3)
+  croix_S4 <- croix(notes_S4, val_S4)
   
   #création des dataframes
   notes_etudiant <<- build_notes_etudiant(notes_S3, notes_S4, croix_S3, croix_S4)
-  print(notes_etudiant)
-  return (notes_etudiant)
+  
+  #return (notes_etudiant)
+  
+  signature <- build_signature()
+  
+  #création des flextable
+  ft_notes <- flextable(notes_etudiant)
+  ft_sign <- flextable(signature)
+  
+  ft_notes <- build_ft_notes(ft_notes)
+  ft_sign <- build_ft_signature(ft_sign)
+  
+  doc <- ecriture(ft_notes, ft_sign)
 }
 
 
-#signature <- build_signature()
 
-#création des flextable
-#ft_notes <- flextable(notes_etudiant)
-#ft_sign <- flextable(signature)
-
-#ft_notes <- build_ft_notes(ft_notes)
-#ft_sign <- build_ft_signature(ft_sign)
-
-#doc <- ecriture(ft_notes, ft_sign)
 
 
 
@@ -224,7 +232,7 @@ generation_df <- function(nom, prenom){
 doc <- read_docx()
 
 #génération du contrat
-#generation("Nom1","Prenom1")
+generation("Nom1","Prenom1",doc)
 
 # pour sauvegarder le document
-print(doc, target = "./contrat_notes_19_mars.docx")
+print(doc, target = "./contrat_notes_27_mars.docx")
