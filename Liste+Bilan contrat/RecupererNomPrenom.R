@@ -2,7 +2,7 @@ source("contrat_notes_fonctions.R")
 library(readxl)
 
 # Read the Excel file (replace 'path/to/your/file.xlsx' with your actual file path)
-file_path <- "~/Documents/INSA/3A/S6/Bilan contrat/juryAD.xlsx"
+file_path <- "juryAD.xlsx"
 data <- read_excel(file_path, sheet = 3, col_types = "text")
 data_cleaned <- data[-c(1:2), ]
 
