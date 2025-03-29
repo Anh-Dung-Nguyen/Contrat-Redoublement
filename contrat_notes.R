@@ -176,11 +176,7 @@ ecriture <- function(ft_notes, ft_sign){
   )
 }
 
-
-### séparer génération dataframe et génération du doc
-#génération du contrat
-generation <- function(nom, prenom, doc){
-  
+generation_df_notes <- function(nom,prenom){
   # récupération du fichier jury
   fichier_jury <- "./jury.xlsx"
   
@@ -196,11 +192,18 @@ generation <- function(nom, prenom, doc){
   
   #pour mettre des croix si l'EC n'est pas validé ou n'a pas de note
   croix <- croix(notes, val)
-
-  #création des dataframes
-  notes_etudiant <<- build_notes_etudiant(notes, croix)
   
-  #return (notes_etudiant)
+  #création des dataframes
+  notes_etudiant <- build_notes_etudiant(notes, croix)
+  
+  return (notes_etudiant)
+}
+
+
+### séparer génération dataframe et génération du doc
+#génération du contrat
+generation <- function(nom, prenom, doc){
+  notes_etudiant <- generation_df_notes(nom, prenom)
   
   signature <- build_signature()
   
@@ -213,9 +216,6 @@ generation <- function(nom, prenom, doc){
   
   doc <- ecriture(ft_notes, ft_sign)
 }
-
-
-
 
 
 
