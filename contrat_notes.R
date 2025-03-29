@@ -13,7 +13,7 @@ library(readxl)
 # global.R
 
 
-source("MCC.R")
+source("MCC_24-25.R")
 
 
 # renvoie les notes de l'élève nom prenom du semestre associé à la feuille de l'excel fichier
@@ -36,10 +36,6 @@ croix <- function(notes,validation){
   croix <- c()
   i <- 1
   for (j in 1:length(validation)){
-    if (j==5){ #pour gérer le stage comme j'ai pas le bon fichier jury donc pas de résultat pour l'UE
-      croix[i] <- "pb"
-      i <- i+1
-    } else{
     if (validation[j] == "NON VALIDE"){
       while(i <= nb_EC_UE[j]){
         if (as.integer(notes[i]) < 10 || is.na(as.integer(notes[i]))){
@@ -56,21 +52,20 @@ croix <- function(notes,validation){
       }
     }
     }
-  }
   return(croix)
 }
 
 
 # création des tableaux de données
-build_notes_etudiant <- function(notes_S3, notes_S4, croix_S3, croix_S4){
+build_notes_etudiant <- function(notes, croix){
   return(
     data.frame(
       LesUE[1],
       LesUE[2],
       LesUE[3],
-      Moyennes = c(notes_S3,notes_S4),
+      Moyennes = notes,
       EcValRepasse = c(rep("",length(LesUE[1]))),
-      EcAVal = c(croix_S3, croix_S4)
+      EcAVal = croix
     ))
 }
 
@@ -102,11 +97,20 @@ build_ft_signature <- function(sign){
   )
 }
 
+# concaténation de lignes pour avoir 1 case par UE
+merge_UE <- function(ft){
+  ft <- ft %>% merge_at(i = 1:nb_EC_UE[1], j = 1)
+  for (c in 1:(length(nb_EC_UE)-1)) {
+    ft <- ft %>% merge_at(i = (nb_EC_UE[c]+1):nb_EC_UE[c+1], j = 1)
+  }
+  return(ft)
+}
+
+
 
 #flextable avec ue, ec, code EC, moyenne, à repasser, à valider
 build_ft_notes <- function(ft){
-  return(
-    ft %>%
+    ft <- ft %>%
       bold(part = "header")%>%
       
       #p changement des noms des colonnes
@@ -118,23 +122,6 @@ build_ft_notes <- function(ft){
         EcValRepasse = "EC validé mais repassé en 2024-2025",
         EcAVal = "EC à valider en 2024-2025"
       )%>%
-      
-      # XXXXX
-      # par contre meme chose le 7 doit etre déduit des constantes du MCC et il 
-      # faudrait une boucle pour que ton code soit adaptable a tout changement
-      # du fichier MCC
-      # XXXX
-      # concaténation de lignes pour avoir 1 case par UE
-      merge_at(i = 1:nb_EC_UE[1], j = 1) %>%
-      merge_at(i = (nb_EC_UE[1]+1):nb_EC_UE[2], j = 1) %>%
-      merge_at(i = (nb_EC_UE[2]+1):nb_EC_UE[3], j = 1) %>%
-      merge_at(i = (nb_EC_UE[3]+1):nb_EC_UE[4], j = 1) %>%
-      merge_at(i = (nb_EC_UE[4]+1):nb_EC_UE[5], j = 1) %>%
-      merge_at(i = (nb_EC_UE[5]+1):nb_EC_UE[6], j = 1) %>%
-      merge_at(i = (nb_EC_UE[6]+1):nb_EC_UE[7], j = 1) %>%
-      merge_at(i = (nb_EC_UE[7]+1):nb_EC_UE[8], j = 1) %>%
-      merge_at(i = (nb_EC_UE[7]+1):nb_EC_UE[8], j = 1) %>%
-      merge_at(i = (nb_EC_UE[8]+1):nb_EC_UE[9], j = 1) %>%
       
       # choix de la largeur des colonnes
       width(j = c(1,2,3,4,5), width = c(1.5,1.7,1.5,1,1))%>%
@@ -148,7 +135,10 @@ build_ft_notes <- function(ft){
       
       # pour mettre la ligne horizontale qui sépare le S3 du S4 en gras
       hline(i = nb_EC_S3, border = fp_border(width = 1.5, color = "black"))
-  )
+    
+    # concaténation de lignes pour avoir 1 case par UE
+    ft <- ft %>% merge_UE()
+  return (ft)
 }
 
 
@@ -197,17 +187,18 @@ generation <- function(nom, prenom, doc){
   # récupération des notes de l'étudiant·e
   notes_S3 <- notes_from_jury(fichier_jury, 2, col_S3, nom, prenom)
   notes_S4 <- notes_from_jury(fichier_jury, 3, col_S4, nom, prenom)
+  notes <- c(notes_S3, notes_S4)
   
   #récupération des validations des UE de l'étudiant·e
   val_S3 <- valide_UE(fichier_jury, 2, col_val_S3, nom, prenom)
   val_S4 <- valide_UE(fichier_jury, 3, col_val_S4, nom, prenom)
+  val <- c(val_S3, val_S4)
   
   #pour mettre des croix si l'EC n'est pas validé ou n'a pas de note
-  croix_S3 <- croix(notes_S3, val_S3)
-  croix_S4 <- croix(notes_S4, val_S4)
-  
+  croix <- croix(notes, val)
+
   #création des dataframes
-  notes_etudiant <<- build_notes_etudiant(notes_S3, notes_S4, croix_S3, croix_S4)
+  notes_etudiant <<- build_notes_etudiant(notes, croix)
   
   #return (notes_etudiant)
   
@@ -235,4 +226,4 @@ doc <- read_docx()
 generation("Nom1","Prenom1",doc)
 
 # pour sauvegarder le document
-print(doc, target = "./contrat_notes_27_mars.docx")
+print(doc, target = "./contrat_notes_29_mars.docx")
