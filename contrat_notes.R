@@ -182,7 +182,7 @@ ecriture <- function(ft_notes, ft_sign){
 generation <- function(nom, prenom, doc){
   
   # récupération du fichier jury
-  fichier_jury <- "/home/yaelle/Bureau/3A/EP_perso/jury.xlsx"
+  fichier_jury <- "./jury.xlsx"
   
   # récupération des notes de l'étudiant·e
   notes_S3 <- notes_from_jury(fichier_jury, 2, col_S3, nom, prenom)
