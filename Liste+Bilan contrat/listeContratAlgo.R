@@ -1,4 +1,4 @@
-source("contrat_notes_fonctions.R")
+source("contrat_notes.R")
 source("RecupererNomPrenom.R")
 library(readxl)
 

@@ -5,8 +5,8 @@ lesUE<-c("Sciences Fondamentales","Sciences Expérimentales","Orientation et Tra
 # -----------------   definition des constantes pour l'UE Sciences Fondamentales ----------------
 
 #colonnes correspondant à l'UE FONDA dans le fichier jury (début:fin)
-col_FONDAS3 <- (6:10)
-col_FONDAS4 <- (6:11)
+col_FONDAS3 <- 14:17
+col_FONDAS4 <- 15:17
 
 #UE Fonda 3
 lesEC_FONDAS3<-c("Algèbre 3","Analyse 3","Informatique 2","Mécanique 3")
@@ -60,8 +60,8 @@ tableauEC_Fonda4<-cbind(UE=rep("Sciences fondamentales (UE-STP04-SF)",3),
                         
 # -----------------   defintion des constantes pour l'UE Sciences Expérimentales ----------------
 #colonnes correspondant à l'UE Sciences Expérimentales dans le fichier jury (début:fin)
-col_EXPS3 <- 14:17
-col_EXPS4 <- 15:17
+col_EXPS3 <- (6:10)
+col_EXPS4 <- (6:11)
 
 #UE EXP 3
 lesEC_EXPS3<-c("Systemes Automatisés","Chimie 3","Electronique 1","TP Physique 3","Thermo-énergétique")
@@ -119,7 +119,7 @@ tableauEC_EXP4<-cbind(UE=rep("Sciences expérimentales (UE-STP04-SE)",6),
 
 # -----------------   defintion des constantes pour l'UE Orientation et Transition ----------------
 #colonnes correspondant à l'UE ORT dans le fichier jury (début:fin)
-col_ORTS3 <- 21:25
+col_ORTS3 <- 25:28
 col_ORTS4 <- 21:23
 
 #UE ORT 3
@@ -178,7 +178,7 @@ tableauEC_SORT4<-cbind(UE=rep("Orientation et Transition (UE-STP04-ORT)",3),
 # -----------------   defintion des constantes pour l'UE HUMA ----------------
 
 #colonnes correspondant à l'UE HUMA dans le fichier jury (début:fin)
-col_HUMAS3 <- 29:32
+col_HUMAS3 <- 32:35
 col_HUMAS4 <- 27:30
 
 #UE HUMA 3
@@ -223,6 +223,8 @@ tableauEC_HUMA4<-cbind(UE=rep("Humanité (UE-STP04-ENS / ENS-FIRE-FR / ENS-FIRE-
                        ECTS=lesECTSHUMAS4)
 
 # -----------------   defintion des constantes pour l'UE Stage ----------------
+#colonnes correspondant à l'UE HUMA dans le fichier jury (début:fin)
+col_STAGE <- 21
 
 lesEC_Stage<-c("Stage")
 lesCodes_Stage<-c("EC-STP03-STAG")
@@ -273,7 +275,7 @@ colNotesOPTS4<-c(3)
 coefOPTS4<-c(1)
 
 # -----------------   defintion des constantes globales ----------------
-LesUE<-rbind(tableauEC_EXP3,tableauEC_Fonda3,tableauEC_SORT3, tableauEC_HUMA3,tableauEC_Stage3,tableauEC_EXP4,tableauEC_Fonda4,tableauEC_SORT4, tableauEC_HUMA4)
+LesUE<-rbind(tableauEC_EXP3,tableauEC_Fonda3,tableauEC_Stage3,tableauEC_SORT3, tableauEC_HUMA3,tableauEC_EXP4,tableauEC_Fonda4,tableauEC_SORT4, tableauEC_HUMA4)
 
 # -------------------constantes pour la création du contrat -------------------
 #nom de le.a directeur.ice du département
@@ -283,8 +285,12 @@ direction_departement <- "Signature de la Directrice du département : Carole Da
 nb_EC_S3 <- length(lesEC_EXPS3) + length(lesEC_FONDAS3) + length(lesEC_ORTS3) + length(lesEC_HUMA_S3) + length(lesEC_Stage)
 
 #numéros des colonnes contenant les notes dans le fichier jury
-col_S3 <- c(col_EXPS3, col_FONDAS3, col_ORTS3, col_HUMAS3)
+col_S3 <- c(col_EXPS3, col_FONDAS3, col_STAGE, col_ORTS3, col_HUMAS3)
 col_S4 <- c(col_EXPS4, col_FONDAS4, col_ORTS4, col_HUMAS4)
+
+#numéros des colonnes contenant le résultat de chaque UE (VALIDE, NON VALIDE, VALIDE COMP)
+col_val_S3 <- c(3,11,18,22,29)
+col_val_S4 <- c(3,12,18,24)
 
 #tableau permettant de merge les cases des UE
 nb_EC <- function(tab){
@@ -294,6 +300,6 @@ nb_EC <- function(tab){
   return(tab)
 }
 
-nb_EC_UE <- c(length(lesEC_EXPS3), length(lesEC_FONDAS3), length(lesEC_ORTS3), length(lesEC_HUMA_S3), length(lesEC_Stage), length(lesEC_EXPS4), length(lesEC_FONDAS4), length(lesEC_ORTS4), length(lesEC_HUMA_S4))
+nb_EC_UE <- c(length(lesEC_EXPS3), length(lesEC_FONDAS3), length(lesEC_Stage), length(lesEC_ORTS3), length(lesEC_HUMA_S3), length(lesEC_EXPS4), length(lesEC_FONDAS4), length(lesEC_ORTS4), length(lesEC_HUMA_S4))
 
 nb_EC_UE <- nb_EC(nb_EC_UE)

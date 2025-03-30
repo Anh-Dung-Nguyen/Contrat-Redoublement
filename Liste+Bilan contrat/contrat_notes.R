@@ -6,8 +6,6 @@ library(magrittr)
 library(dplyr)
 library(flextable)
 library(readxl)
-library(cli)
-
 
 
 # j'ai ajoute cette ligne pour que le fichier MCC soit chargé, si vous avez
@@ -15,71 +13,65 @@ library(cli)
 # global.R
 
 
-source("MCC1.R")
+source("MCC_24-25.R")
 
 
 # renvoie les notes de l'élève nom prenom du semestre associé à la feuille de l'excel fichier
-# XXXX ne faudrait il pas aussi recuperer les validations des différentes UE ?
 notes_from_jury <- function(fichier, feuille, colonnes, nom, prenom){
   semestre <- read_excel(fichier, sheet = feuille, col_types = "text")
   notes <- semestre[semestre[[1]] == nom & semestre[[2]] == prenom, colonnes]
   return(unlist(notes[rowSums(is.na(notes)) != ncol(notes), ]))
 }
 
+#renvoie les validations ou non de chaque UE pour un semestre
+valide_UE <- function(fichier, feuille, col_val, nom, prenom){
+  semestre <- read_excel(fichier, sheet = feuille, col_types = "text")
+  validations <- semestre[semestre[[1]] == nom & semestre[[2]] == prenom, col_val]
+  return(unlist(validations[rowSums(is.na(validations)) != ncol(validations), ]))
+}
+
+##### comment c'est écrit quand l'EC est en validation?? majusucle, minuscule?
 # renvoie un vecteur contenant des croix si l'ec n'est pas validé
-# XXXX
-# attentin j'ai l'impression que vous n'avez pas traité les matieres qui 
-# sont sans note mais uniquement avec validation
-# XXXX
-
-
-croix <- function(notes){
+croix <- function(notes,validation){
   croix <- c()
   i <- 1
-  for (note in notes){
-    if (as.integer(note) < 10 || is.na(as.integer(note))){ 
-      #il faut aussi gérer si c'est en validation ms jsp comment c'est écrit dans le tableur
-      # XXXXX
-      # c'est simple dans ta feuille, il y a une premiere colonne appelee "Résultat"
-      # si la valeur dans cette colonne est VALIDE ou "VALID COMP" alors toutes les 
-      # EC de l'UE sont validées sinon il faut regarder la ntoe de chaque EC
-      # XXXXXX
-      croix[i] <- "X"
+  for (j in 1:length(validation)){
+    if (validation[j] == "NON VALIDE"){
+      while(i <= nb_EC_UE[j]){
+        if (as.integer(notes[i]) < 10 || is.na(as.integer(notes[i]))){
+          croix[i] <- "X"
+        }else{
+          croix[i] <- ""
+        }
+        i = i+1
+      }
     }else{
-      croix[i] <- ""
+      while(i <= nb_EC_UE[j]){
+        croix[i] <- ""
+        i = i+1
+      }
     }
-    i = i+1
-  }
+    }
   return(croix)
 }
 
-# JE VOIS PAS OU C'EST, LesUE[1] corresponds à la colonne contenant toutes les UES, 
-#LesUE[2] contient les EC, LesUE[3] contient les codes des EC
 
-# attention ici tu as end ure le fait d'avoir 3 UE
-# il faut que ceci s'adapte automtaquement en fonction du fichier MCC
-# d'ailleurs pour le MCC de cette année, il y a 4 UE
-# solution on peut facilement ajouter des colonnes a un dataframe dans un for
-# cf dernier tp de proba
-
-# XXXX en faire une petite fonction : build_notes_etudiant
 # création des tableaux de données
-build_notes_etudiant <- function(notes_S3, notes_S4, croix_S3, croix_S4){
+build_notes_etudiant <- function(notes, croix){
   return(
     data.frame(
       LesUE[1],
       LesUE[2],
       LesUE[3],
-      Moyennes = c(notes_S3,notes_S4),
+      Moyennes = notes,
       EcValRepasse = c(rep("",length(LesUE[1]))),
-      EcAVal = c(croix_S3, croix_S4)
+      EcAVal = croix
     ))
 }
 
-# ideme : petite fonction build_signature
 build_signature <- function(){
   return(
-    signature <- data.frame(
+      data.frame(
       c1 = c("Date :\n\n\n\n\n"),
       c2 = c("Date :\n\n\n\n\n"),
       c3 = c("\n\n\n\n\n ")
@@ -105,11 +97,20 @@ build_ft_signature <- function(sign){
   )
 }
 
+# concaténation de lignes pour avoir 1 case par UE
+merge_UE <- function(ft){
+  ft <- ft %>% merge_at(i = 1:nb_EC_UE[1], j = 1)
+  for (c in 1:(length(nb_EC_UE)-1)) {
+    ft <- ft %>% merge_at(i = (nb_EC_UE[c]+1):nb_EC_UE[c+1], j = 1)
+  }
+  return(ft)
+}
+
+
 
 #flextable avec ue, ec, code EC, moyenne, à repasser, à valider
 build_ft_notes <- function(ft){
-  return(
-    ft %>%
+    ft <- ft %>%
       bold(part = "header")%>%
       
       #p changement des noms des colonnes
@@ -121,24 +122,6 @@ build_ft_notes <- function(ft){
         EcValRepasse = "EC validé mais repassé en 2024-2025",
         EcAVal = "EC à valider en 2024-2025"
       )%>%
-      
-      # XXXXX
-      # ok nb_EC_UE defini dans MCC
-      # par contre meme chose le 7 doit etre déduit des constantes du MCC et il 
-      # faudrait une boucle pour que ton code soit adaptable a tout changement
-      # du fichier MCC
-      # XXXX
-      # concaténation de lignes pour avoir 1 case par UE
-      merge_at(i = 1:nb_EC_UE[1], j = 1) %>%
-      merge_at(i = (nb_EC_UE[1]+1):nb_EC_UE[2], j = 1) %>%
-      merge_at(i = (nb_EC_UE[2]+1):nb_EC_UE[3], j = 1) %>%
-      merge_at(i = (nb_EC_UE[3]+1):nb_EC_UE[4], j = 1) %>%
-      merge_at(i = (nb_EC_UE[4]+1):nb_EC_UE[5], j = 1) %>%
-      merge_at(i = (nb_EC_UE[5]+1):nb_EC_UE[6], j = 1) %>%
-      merge_at(i = (nb_EC_UE[6]+1):nb_EC_UE[7], j = 1) %>%
-      merge_at(i = (nb_EC_UE[7]+1):nb_EC_UE[8], j = 1) %>%
-      merge_at(i = (nb_EC_UE[7]+1):nb_EC_UE[8], j = 1) %>%
-      merge_at(i = (nb_EC_UE[8]+1):nb_EC_UE[9], j = 1) %>%
       
       # choix de la largeur des colonnes
       width(j = c(1,2,3,4,5), width = c(1.5,1.7,1.5,1,1))%>%
@@ -152,7 +135,10 @@ build_ft_notes <- function(ft){
       
       # pour mettre la ligne horizontale qui sépare le S3 du S4 en gras
       hline(i = nb_EC_S3, border = fp_border(width = 1.5, color = "black"))
-  )
+    
+    # concaténation de lignes pour avoir 1 case par UE
+    ft <- ft %>% merge_UE()
+  return (ft)
 }
 
 
@@ -191,23 +177,31 @@ ecriture <- function(ft_notes, ft_sign){
 }
 
 
-
+### séparer génération dataframe et génération du doc
 #génération du contrat
 generation <- function(nom, prenom, doc){
   
   # récupération du fichier jury
-  fichier_jury <- "juryAD.xlsx"
+  fichier_jury <- "./jury.xlsx"
   
   # récupération des notes de l'étudiant·e
   notes_S3 <- notes_from_jury(fichier_jury, 2, col_S3, nom, prenom)
   notes_S4 <- notes_from_jury(fichier_jury, 3, col_S4, nom, prenom)
+  notes <- c(notes_S3, notes_S4)
+  
+  #récupération des validations des UE de l'étudiant·e
+  val_S3 <- valide_UE(fichier_jury, 2, col_val_S3, nom, prenom)
+  val_S4 <- valide_UE(fichier_jury, 3, col_val_S4, nom, prenom)
+  val <- c(val_S3, val_S4)
   
   #pour mettre des croix si l'EC n'est pas validé ou n'a pas de note
-  croix_S3 <- croix(notes_S3)
-  croix_S4 <- croix(notes_S4)
-  
+  croix <- croix(notes, val)
+
   #création des dataframes
-  notes_etudiant <- build_notes_etudiant(notes_S3, notes_S4, croix_S3, croix_S4)
+  notes_etudiant <<- build_notes_etudiant(notes, croix)
+  
+  #return (notes_etudiant)
+  
   signature <- build_signature()
   
   #création des flextable
@@ -225,3 +219,11 @@ generation <- function(nom, prenom, doc){
 
 
 
+# création d'un nouvel objet de document Word
+doc <- read_docx()
+
+#génération du contrat
+generation("Nom1","Prenom1",doc)
+
+# pour sauvegarder le document
+print(doc, target = "./contrat_notes_29_mars.docx")
