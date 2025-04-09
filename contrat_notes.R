@@ -30,7 +30,7 @@ valide_UE <- function(fichier, feuille, col_val, nom, prenom){
   return(unlist(validations[rowSums(is.na(validations)) != ncol(validations), ]))
 }
 
-##### comment c'est écrit quand l'EC est en validation?? majusucle, minuscule?
+##### écrit en majuscule quand l'EC est en validation
 # renvoie un vecteur contenant des croix si l'ec n'est pas validé
 croix <- function(notes,validation){
   croix <- c()
