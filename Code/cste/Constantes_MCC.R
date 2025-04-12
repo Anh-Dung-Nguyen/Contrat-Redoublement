@@ -52,7 +52,7 @@ poids_FONDA_S4 <- list(
     lesEC_FONDAS4[1] <- c(1.5, 1.5),
     lesEC_FONDAS4[2] <- c(2, 1),
     lesEC_FONDAS4[3] <- c(1.5, 1.5)
-  )
+)
 
 dataframenotesECFONDAS4 <- do.call(rbind, lapply(lesNotesEC_FONDAS4, function(x) {
   as.data.frame(t(x), stringsAsFactors = FALSE)
@@ -91,7 +91,7 @@ poids_EXP_S3 <- list(
     lesEC_EXPS3[3] <- c(2, 1),
     lesEC_EXPS3[4] <- c(2),
     lesEC_EXPS3[5] <- c(1)
-  )
+)
 
 dataframenotesECTSEXPS3 <- do.call(rbind, lapply(lesNotesEC_EXPS3, function(x) {
   as.data.frame(t(x), stringsAsFactors = FALSE)
@@ -128,7 +128,7 @@ poids_EXP_S4 <- list(
     lesEC_EXPS4[4] <- c(1),
     lesEC_EXPS4[5] <- c(1),
     lesEC_EXPS4[6] <- c(1)
-  )
+)
 
 dataframenotesECTSEXPS4 <- do.call(rbind, lapply(lesNotesEC_EXPS4, function(x) {
   as.data.frame(t(x), stringsAsFactors = FALSE)
@@ -163,7 +163,7 @@ poids_ORT_S3 <- list(
     lesEC_ORTS3[2] <- c(1),
     lesEC_ORTS3[3] <- c(1),
     lesEC_ORTS3[4] <- c(1, 1)
-  )
+)
 
 dataframenotesECTSORTS3 <- do.call(rbind, lapply(lesNotesEC_ORTS3, function(x) {
   as.data.frame(t(x), stringsAsFactors = FALSE)
@@ -194,7 +194,7 @@ poids_ORT_S4 <- list(
     lesEC_ORTS4[1] <- c(1),
     lesEC_ORTS4[2] <- c(1),
     lesEC_ORTS4[3] <- c(1)
-  )
+)
 
 dataframenotesECTSORTS4 <- do.call(rbind, lapply(lesNotesEC_ORTS4, function(x) {
   as.data.frame(t(x), stringsAsFactors = FALSE)
@@ -234,7 +234,7 @@ poids_HUMA_S3 <- list(
     lesEC_HUMA_S3[2] <- c(1),
     lesEC_HUMA_S3[3] <- c(1),
     lesEC_HUMA_S3[4] <- c(1)
-  )
+)
 
 dataframenotesECTSHUMA <- do.call(rbind, lapply(lesNotesEC_HUMA, function(x) {
   as.data.frame(t(x), stringsAsFactors = FALSE)

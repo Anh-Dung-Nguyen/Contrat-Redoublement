@@ -1,8 +1,8 @@
-source("Code/cste/Constantes_MCC.R")
-source("Code/generation_notes/compensation.R")
-source("Code/generation_notes/generer_notes_automatique.R")
-source("Code/generation_notes/creer_ligne_unique.R")
-source("Code/generation_notes/write_data_to_sheet.R")
+source("Contrat-Redoublement/Code/cste/Constantes_MCC.R")
+source("Contrat-Redoublement/Code/generation_notes/compensation.R")
+source("Contrat-Redoublement/Code/generation_notes/generer_notes_automatique.R")
+source("Contrat-Redoublement/Code/generation_notes/creer_ligne_unique.R")
+source("Contrat-Redoublement/Code/generation_notes/write_data_to_sheet.R")
 library(dplyr)
 
 main <- function() {

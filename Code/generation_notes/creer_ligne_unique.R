@@ -1,6 +1,6 @@
-source("Code/cste/Constantes_MCC.R")
-source("Code/generation_notes/compensation.R")
-source("Code/generation_notes/generer_notes_automatique.R")
+source("Contrat-Redoublement/Code/cste/Constantes_MCC.R")
+source("Contrat-Redoublement/Code/generation_notes/compensation.R")
+source("Contrat-Redoublement/Code/generation_notes/generer_notes_automatique.R")
 library(dplyr)
 
 # Calculer les données synthétiques pour chaque UE

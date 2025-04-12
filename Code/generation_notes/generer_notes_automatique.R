@@ -1,4 +1,4 @@
-source("Code/cste/Constantes_MCC.R")
+source("Contrat-Redoublement/Code/cste/Constantes_MCC.R")
 library(dplyr)
 
 # -----------------   génération des notes automatiques ----------------

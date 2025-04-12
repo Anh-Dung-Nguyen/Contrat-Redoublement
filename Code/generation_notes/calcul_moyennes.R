@@ -4,7 +4,7 @@ library(dplyr)
 
 compensation_intra_UE <- function(df) {
   df <- df %>%
-    group_by(UE) %>%
+    group_by(LesUE) %>%
     mutate(
       Moyenne_UE = signif(sum(Moyenne * ECTS, na.rm = TRUE) / sum(ECTS * !is.na(Moyenne), na.rm = TRUE), 4),
       Validation = ifelse(Moyenne_UE >= 10 & Validation == "Non valide", "ValideComp", Validation)
@@ -15,10 +15,10 @@ compensation_intra_UE <- function(df) {
 
 compensation_inter_UE <- function(df, ue_scientifique) {
   df_scientifique <- df %>% 
-    filter(UE %in% ue_scientifique)
+    filter(LesUE %in% ue_scientifique)
 
     moyenne_ponderee_ue <- df_scientifique %>%
-      group_by(UE) %>%
+      group_by(LesUE) %>%
         summarise(
           Moyenne_UE = mean(Moyenne, na.rm = TRUE),
           .groups = "drop"
