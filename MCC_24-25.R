@@ -1,12 +1,11 @@
 lesUE<-c("Sciences Fondamentales","Sciences Expérimentales","Orientation et Transition","Humanités", "Stage" )
+#tableau_lesUE<-data.frame(ListDeUE=lesUE)
+
+direction_departement <- "Signature de la Directrice du département : Carole Daiguebonne"
 
 #  MCC : Partie devant être définie à la main
 
 # -----------------   definition des constantes pour l'UE Sciences Fondamentales ----------------
-
-#colonnes correspondant à l'UE FONDA dans le fichier jury (début:fin)
-col_FONDAS3 <- 14:17
-col_FONDAS4 <- 15:17
 
 #UE Fonda 3
 lesEC_FONDAS3<-c("Algèbre 3","Analyse 3","Informatique 2","Mécanique 3")
@@ -18,6 +17,12 @@ lesNotesEC_FONDAS3 <- list(
   list("DS1", "DS2",NA),
   list("DS1", "DS2", "CC")
 )
+
+poids_FONDA_S3 <- list(
+    lesEC_FONDAS3[1] <- c(1.5, 1.5),
+    lesEC_FONDAS3[2] <- c(2, 1),
+    lesEC_FONDAS3[3] <- c(1.5, 1.5, 1.5)
+  )
 
 dataframenotesECFONDAS3 <- do.call(rbind, lapply(lesNotesEC_FONDAS3, function(x) {
   as.data.frame(t(x), stringsAsFactors = FALSE)
@@ -43,6 +48,12 @@ lesNotesEC_FONDAS4 <- list(
   list("DS1", "DS2",NA)
 )
 
+poids_FONDA_S4 <- list(
+    lesEC_FONDAS4[1] <- c(1.5, 1.5),
+    lesEC_FONDAS4[2] <- c(2, 1),
+    lesEC_FONDAS4[3] <- c(1.5, 1.5)
+)
+
 dataframenotesECFONDAS4 <- do.call(rbind, lapply(lesNotesEC_FONDAS4, function(x) {
   as.data.frame(t(x), stringsAsFactors = FALSE)
 }))
@@ -59,9 +70,7 @@ tableauEC_Fonda4<-cbind(UE=rep("Sciences fondamentales (UE-STP04-SF)",3),
 
                         
 # -----------------   defintion des constantes pour l'UE Sciences Expérimentales ----------------
-#colonnes correspondant à l'UE Sciences Expérimentales dans le fichier jury (début:fin)
-col_EXPS3 <- (6:10)
-col_EXPS4 <- (6:11)
+
 
 #UE EXP 3
 lesEC_EXPS3<-c("Systemes Automatisés","Chimie 3","Electronique 1","TP Physique 3","Thermo-énergétique")
@@ -74,6 +83,14 @@ lesNotesEC_EXPS3 <- list(
   list("DS", "CC",NA),         # Electro
   list("TP",NA,NA),               # TP Phys
   list("DS",NA,NA)                # Thermo
+)
+
+poids_EXP_S3 <- list(
+    lesEC_EXPS3[1] <- c(5, 3),
+    lesEC_EXPS3[2] <- c(1, 1, 1),
+    lesEC_EXPS3[3] <- c(2, 1),
+    lesEC_EXPS3[4] <- c(2),
+    lesEC_EXPS3[5] <- c(1)
 )
 
 dataframenotesECTSEXPS3 <- do.call(rbind, lapply(lesNotesEC_EXPS3, function(x) {
@@ -103,6 +120,16 @@ lesNotesEC_EXPS4 <- list(
   list("TP",NA,NA),               # Phys
   list("FI",NA,NA)                # SI
 )
+
+poids_EXP_S4 <- list(
+    lesEC_EXPS4[1] <- c(2, 1),
+    lesEC_EXPS4[2] <- c(2, 1),
+    lesEC_EXPS4[3] <- c(1, 1),
+    lesEC_EXPS4[4] <- c(1),
+    lesEC_EXPS4[5] <- c(1),
+    lesEC_EXPS4[6] <- c(1)
+)
+
 dataframenotesECTSEXPS4 <- do.call(rbind, lapply(lesNotesEC_EXPS4, function(x) {
   as.data.frame(t(x), stringsAsFactors = FALSE)
 }))
@@ -118,9 +145,6 @@ tableauEC_EXP4<-cbind(UE=rep("Sciences expérimentales (UE-STP04-SE)",6),
                       ECTS=lesECTSEXPS4)
 
 # -----------------   defintion des constantes pour l'UE Orientation et Transition ----------------
-#colonnes correspondant à l'UE ORT dans le fichier jury (début:fin)
-col_ORTS3 <- 25:28
-col_ORTS4 <- 21:23
 
 #UE ORT 3
 lesEC_ORTS3<-c("ADS","PPI 3","RIE","TEDS 3")
@@ -128,12 +152,19 @@ lesCodes_ORTS3<-c("EC-STP03-ADS","EC-STP03-PPI","EC-STP03-RIE","EC-STP03-TEDS")
 
 lesTypeEC_ORTS3<-c("Validation","Validation","Validation","Note")
 lesNotesEC_ORTS3 <- list(
-  
   list(NA,NA,NA),         # ADS
   list(NA,NA,NA),         # PPI
   list(NA,NA,NA),         # RIE
   list("IO","DS",NA)          # TEDS
 )
+
+poids_ORT_S3 <- list(
+    lesEC_ORTS3[1] <- c(1),
+    lesEC_ORTS3[2] <- c(1),
+    lesEC_ORTS3[3] <- c(1),
+    lesEC_ORTS3[4] <- c(1, 1)
+)
+
 dataframenotesECTSORTS3 <- do.call(rbind, lapply(lesNotesEC_ORTS3, function(x) {
   as.data.frame(t(x), stringsAsFactors = FALSE)
 }))
@@ -159,6 +190,12 @@ lesNotesEC_ORTS4 <- list(
   list("FI",NA,NA)          # TEDS
 )
 
+poids_ORT_S4 <- list(
+    lesEC_ORTS4[1] <- c(1),
+    lesEC_ORTS4[2] <- c(1),
+    lesEC_ORTS4[3] <- c(1)
+)
+
 dataframenotesECTSORTS4 <- do.call(rbind, lapply(lesNotesEC_ORTS4, function(x) {
   as.data.frame(t(x), stringsAsFactors = FALSE)
 }))
@@ -177,10 +214,6 @@ tableauEC_SORT4<-cbind(UE=rep("Orientation et Transition (UE-STP04-ORT)",3),
 
 # -----------------   defintion des constantes pour l'UE HUMA ----------------
 
-#colonnes correspondant à l'UE HUMA dans le fichier jury (début:fin)
-col_HUMAS3 <- 32:35
-col_HUMAS4 <- 27:30
-
 #UE HUMA 3
 lesEC_HUMA_S3<-c("Anglais 3","Culture et Communication 3\nFLE Comm","EPS 3","Module à choix S3 (LV2-FLE)")
 lesCodes_HUMAS3<-c("EC-STP03-ANGL","EC-STP03-COMM\nEC-STP03-FLE-COMM","EC-STP03-EPS","EC-STP03-LV2\nEC-STP03-FLE")
@@ -194,6 +227,13 @@ lesNotesEC_HUMA <- list(
   list("FI",NA,NA),         # C&C
   list("FI",NA,NA),          # EPS
   list("FI",NA,NA)            #LV2
+)
+
+poids_HUMA_S3 <- list(
+    lesEC_HUMA_S3[1] <- c(1.5, 1.5),
+    lesEC_HUMA_S3[2] <- c(1),
+    lesEC_HUMA_S3[3] <- c(1),
+    lesEC_HUMA_S3[4] <- c(1)
 )
 
 dataframenotesECTSHUMA <- do.call(rbind, lapply(lesNotesEC_HUMA, function(x) {
@@ -215,6 +255,13 @@ lesEC_HUMA_S4<- c("Anglais 4","Culture et Communication 4\nFLE Comm","EPS 4","Mo
 lesCodes_HUMAS4<-c("EC-STP04-ANGL","EC-STP04-COMM\nEC-STP04-FLE-COMM","EC-STP04-EPS","EC-STP04-LV2\nEC-STP04-FLE")
 lesECTSHUMAS4<-c(1.5,1.5,1,1) # Anglais, C&C, EPS, LV2
 
+poids_HUMA_S4 <- list(
+    lesEC_HUMA_S4[1] <- c(1.5, 1.5),
+    lesEC_HUMA_S4[2] <- c(1),
+    lesEC_HUMA_S4[3] <- c(1),
+    lesEC_HUMA_S4[4] <- c(1)
+)
+
 tableauEC_HUMA4<-cbind(UE=rep("Humanité (UE-STP04-ENS / ENS-FIRE-FR / ENS-FIRE-NFR)",4),
                        EC=lesEC_HUMA_S4,
                        CodeEC=lesCodes_HUMAS4,
@@ -223,14 +270,16 @@ tableauEC_HUMA4<-cbind(UE=rep("Humanité (UE-STP04-ENS / ENS-FIRE-FR / ENS-FIRE-
                        ECTS=lesECTSHUMAS4)
 
 # -----------------   defintion des constantes pour l'UE Stage ----------------
-#colonnes correspondant à l'UE HUMA dans le fichier jury (début:fin)
-col_STAGE <- 21
 
 lesEC_Stage<-c("Stage")
 lesCodes_Stage<-c("EC-STP03-STAG")
 lesTypeEC_Stage<-c("Note")
 lesNotesEC_Stage <- list(
   list("FI", NA ,NA)
+)
+
+poids_STAG_S3 <- list(
+    lesEC_Stage[1] <- c(1)
 )
 
 dataframenotesECStage <- do.call(rbind, lapply(lesNotesEC_Stage, function(x) {
@@ -275,31 +324,5 @@ colNotesOPTS4<-c(3)
 coefOPTS4<-c(1)
 
 # -----------------   defintion des constantes globales ----------------
-LesUE<-rbind(tableauEC_EXP3,tableauEC_Fonda3,tableauEC_Stage3,tableauEC_SORT3, tableauEC_HUMA3,tableauEC_EXP4,tableauEC_Fonda4,tableauEC_SORT4, tableauEC_HUMA4)
-
-# -------------------constantes pour la création du contrat -------------------
-#nom de le.a directeur.ice du département
-direction_departement <- "Signature de la Directrice du département : Carole Daiguebonne"
-
-#pour mettre une ligne en gras entre S3 et S4
+LesUE<-rbind(tableauEC_EXP3,tableauEC_Fonda3,tableauEC_SORT3, tableauEC_HUMA3,tableauEC_Stage3,tableauEC_EXP4,tableauEC_Fonda4,tableauEC_SORT4, tableauEC_HUMA4)
 nb_EC_S3 <- length(lesEC_EXPS3) + length(lesEC_FONDAS3) + length(lesEC_ORTS3) + length(lesEC_HUMA_S3) + length(lesEC_Stage)
-
-#numéros des colonnes contenant les notes dans le fichier jury
-col_S3 <- c(col_EXPS3, col_FONDAS3, col_STAGE, col_ORTS3, col_HUMAS3)
-col_S4 <- c(col_EXPS4, col_FONDAS4, col_ORTS4, col_HUMAS4)
-
-#numéros des colonnes contenant le résultat de chaque UE (VALIDE, NON VALIDE, VALIDE COMP)
-col_val_S3 <- c(3,11,18,22,29)
-col_val_S4 <- c(3,12,18,24)
-
-#tableau permettant de merge les cases des UE
-nb_EC <- function(tab){
-  for(i in 2:length(tab)){
-    tab[i] <- tab[i-1] + tab[i]
-  }
-  return(tab)
-}
-
-nb_EC_UE <- c(length(lesEC_EXPS3), length(lesEC_FONDAS3), length(lesEC_Stage), length(lesEC_ORTS3), length(lesEC_HUMA_S3), length(lesEC_EXPS4), length(lesEC_FONDAS4), length(lesEC_ORTS4), length(lesEC_HUMA_S4))
-
-nb_EC_UE <- nb_EC(nb_EC_UE)
