@@ -1,4 +1,4 @@
-source("~/Nguyen Anh Dung/Project/Etude Pratique/Contrat-Redoublement/Code/cste/Constantes_MCC.R")
+source("MCC_24-25.R")
 library(dplyr)
 
 noms <- c("Martin", "Bernard", "Thomas", "Petit", "Robert", "Richard", "Durand", "Dubois", "Moreau", "Laurent", "Simon", "Michel", "Garcia", "David", "Bertrand", "Roux", "Vincent", "Fournier", "Leroy", "Morin", "Roger", "Fontaine", "Garnier", "Moulin", "Chevalier")
