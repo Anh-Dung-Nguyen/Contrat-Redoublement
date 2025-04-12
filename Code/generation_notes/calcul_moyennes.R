@@ -1,38 +1,40 @@
-source("Code/cste/Constantes_MCC.R")
-source("Code/generation_notes/generer_notes_automatique.R")
+# Fichier : calcul_moyennes.R
+
 library(dplyr)
 
-compensation_intra_UE <- function(df) {
-  df <- df %>%
-    group_by(LesUE) %>%
-    mutate(
-      Moyenne_UE = signif(sum(Moyenne * ECTS, na.rm = TRUE) / sum(ECTS * !is.na(Moyenne), na.rm = TRUE), 4),
-      Validation = ifelse(Moyenne_UE >= 10 & Validation == "Non valide", "ValideComp", Validation)
-    ) %>%
-    ungroup()
-  return(df)
-}
+# Étape 1 : Calcul de la moyenne de chaque EC
+LesUE_notes <- LesUE_notes %>%
+  rowwise() %>%
+  mutate(
+    Moyenne_EC = {
+      notes <- c_across(`Évaluation 1`:`Évaluation 3`)
+      notes_num <- suppressWarnings(as.numeric(notes))
+      mean(notes_num, na.rm = TRUE)
+    }
+  ) %>%
+  ungroup()
 
-compensation_inter_UE <- function(df, ue_scientifique) {
-  df_scientifique <- df %>% 
-    filter(LesUE %in% ue_scientifique)
+# Étape 2 : Calcul de la moyenne de chaque UE (pondérée par ECTS)
+# Important : convertir ECTS et Moyenne_EC en numérique
+LesUE_notes$ECTS <- as.numeric(LesUE_notes$ECTS)
+LesUE_notes$Moyenne_EC <- as.numeric(LesUE_notes$Moyenne_EC)
 
-    moyenne_ponderee_ue <- df_scientifique %>%
-      group_by(LesUE) %>%
-        summarise(
-          Moyenne_UE = mean(Moyenne, na.rm = TRUE),
-          .groups = "drop"
-        ) %>%
-        summarise(
-          Moyenne_globale = mean(Moyenne_UE, na.rm = TRUE)
-        ) %>%
-    pull(Moyenne_globale)
+# Calcul pondéré par UE
+moyennes_UE <- LesUE_notes %>%
+  group_by(ID, UE) %>%
+  summarise(Moyenne_UE = weighted.mean(Moyenne_EC, ECTS, na.rm = TRUE), .groups = "drop")
 
-  if (moyenne_ponderee_ue >= 10) {
-    df <- df %>%
-      mutate(
-        Validation = ifelse(UE %in% ue_scientifique & Validation == "Non valide", "ValideComp", Validation)
-      )
-  }
-  return(df)
-}
+# Étape 3 : Jointure pour inclure la colonne Moyenne_UE dans LesUE_notes
+LesUE_notes <- LesUE_notes %>%
+  left_join(moyennes_UE, by = c("ID", "UE"))
+
+# Résultat : LesUE_notes contient désormais Moyenne_EC + Moyenne_UE
+
+LesUE_notes <- LesUE_notes %>%
+  mutate(
+    Résultat = case_when(
+      is.na(Moyenne_UE) ~ "Non défini",
+      Moyenne_UE >= 10 ~ "Valide",
+      TRUE ~ "Non valide"
+    )
+  )
