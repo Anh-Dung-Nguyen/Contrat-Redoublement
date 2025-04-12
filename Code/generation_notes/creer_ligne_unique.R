@@ -1,94 +1,101 @@
-source("Contrat-Redoublement/Code/cste/Constantes_MCC.R")
-source("Contrat-Redoublement/Code/generation_notes/compensation.R")
-source("Contrat-Redoublement/Code/generation_notes/generer_notes_automatique.R")
+# Extraction des données S3 de LesUE_notes
 library(dplyr)
 
-# Calculer les données synthétiques pour chaque UE
-creer_ligne_unique_s3 <- function(df) {
-  # Fonction utilitaire pour extraire les données pour une UE spécifique
-  extraire_donnees <- function(df, ue_name, ecs) {
-    sous_df <- df %>% filter(UE == ue_name)
-    validation_ue <- unique(sous_df$Validation)
-    somme_ects <- sum(sous_df$ECTS, na.rm = TRUE)
-    moyenne_ue <- unique(sous_df$Moyenne_UE)
-    validation_ue <- ifelse(moyenne_ue >= 10, "Valide", "Non valide")
-    moyennes_ec <- sapply(ecs, function(ec) {
-      moyenne_ec <- sous_df %>% filter(EC == ec) %>% pull(Moyenne)
-      if (length(moyenne_ec) == 0) return(NA) else return(moyenne_ec)
+# Fonction utilitaire pour filtrer et extraire les valeurs
+extraire_s3 <- function(df_etud) {
+  # Filtrage UE par semestre S3 (chaque nom contient STP03)
+  df_S3 <- df_etud %>% filter(grepl("UE-STP03", UE))
+  
+  # Fonction pour extraire informations d'une UE
+  extract_ue <- function(df, nom_ue, ec_order) {
+    data <- df %>% filter(UE == nom_ue)
+    res <- unique(data$Résultat)
+    ects <- sum(data$ECTS, na.rm = TRUE)
+    moy_ue <- unique(data$Moyenne_UE)
+    moy_ecs <- sapply(ec_order, function(x) {
+      m <- data %>% filter(CodeEC == x) %>% pull(Moyenne_EC)
+      if (length(m) == 0) return(NA) else return(m)
     })
-    return(c(validation_ue, somme_ects, moyenne_ue, moyennes_ec))
+    return(c(res, ects, moy_ue, moy_ecs))
   }
   
-  # Créer la ligne unique avec les données demandées
-  ligne_s3 <- c(
-    extraire_donnees(df, lesUE[2], lesEC_EXPS3),
-    extraire_donnees(df, lesUE[1], lesEC_FONDAS3),
-    extraire_donnees(df, lesUE[3], lesEC_ORTS3),
-    extraire_donnees(df, lesUE[4], lesEC_HUMA_S3),
-    extraire_donnees(df, lesUE[5], lesEC_Stage)
+  # Ordre demandé
+  ligne <- c(
+    extract_ue(df_S3, "Sciences expérimentales (UE-STP03-SE)", c("EC-STP03-ACSA","EC-STP03-CHIM","EC-STP03-ELEC","EC-STP03-PHYS","EC-STP03-THEN")),
+    extract_ue(df_S3, "Sciences fondamentales (UE-STP03-SF)", c("EC-STP03-ALG","EC-STP03-ANA","EC-STP03-INFO","EC-STP03-MECA")),
+    extract_ue(df_S3, "Stage (UE-STP03-STAG)", c("EC-STP03-STAG")),
+    extract_ue(df_S3, "Orientation et Transition (UE-STP03-ORT)", c("EC-STP03-ADS","EC-STP03-PPI","EC-STP03-RIE","EC-STP03-TEDS")),
+    extract_ue(df_S3, "Humanité (UE-STP03-ENS / ENS-FIRE-FR / ENS-FIRE-NFR)", c("EC-STP03-ANGL","EC-STP03-COMM\nEC-STP03-FLE-COMM","EC-STP03-EPS","EC-STP03-LV2\nEC-STP03-FLE"))
   )
   
-  # Ajouter des noms de colonnes clairs
-  col_names_s3 <- c(
-    "Validation_EXP_S3", "Somme_ECTS_EXP_S3", "Moyenne_UE_EXP_S3", "Moyenne_ACSA", "Moyenne_CHIM",
-    "Moyenne_ELEC", "Moyenne_PHYS", "Moyenne_THEN",
-    "Validation_FONDA_S3", "Somme_ECTS_FONDA_S3", "Moyenne_UE_FONDA_S3", "Moyenne_ALG",
-    "Moyenne_ANA", "Moyenne_INFO", "Moyenne_MECA",
-    "Validation_ORT_S3", "Somme_ECTS_ORT_S3", "Moyenne_UE_ORT_S3", "Moyenne_ADS",
-    "Moyenne_PPI", "Moyenne_RIE", "Moyenne_STAG",
-    "Validation_HUMA_S3", "Somme_ECTS_HUMA_S3", "Moyenne_UE_HUMA_S3", "Moyenne_ANGL",
-    "Moyenne_COMM", "Moyenne_EPS", "Moyenne_LV2",
-    "Validation_STAG_S3", "Somme_ECTS_STAG_S3", "Moyenne_UE_STAG_S3", "Moyenne_STAG"
+  # Nom des colonnes dans le bon ordre
+  noms_colonnes <- c(
+    "Res_EXP", "ECTS_EXP", "Moy_EXP", "Moy_ACSA", "Moy_Chimie", "Moy_Electro", "Moy_TP", "Moy_Thermo",
+    "Res_FONDA", "ECTS_FONDA", "Moy_FONDA", "Moy_Alg", "Moy_Ana", "Moy_Info", "Moy_Meca",
+    "Res_STAGE", "ECTS_STAGE", "Moy_STAGE", "Moy_Stage",
+    "Res_ORT", "ECTS_ORT", "Moy_ORT", "Moy_ADS", "Moy_PPI", "Moy_RIE", "Moy_TEDS",
+    "Res_HUMA", "ECTS_HUMA", "Moy_HUMA", "Moy_Ang", "Moy_Comm", "Moy_EPS", "Moy_LV2"
   )
   
-  # Transformer en DataFrame
-  ligne_dfs3 <- as.data.frame(t(ligne_s3), stringsAsFactors = FALSE)
+  result <- as.data.frame(t(ligne), stringsAsFactors = FALSE)
+  colnames(result) <- noms_colonnes
   
-  colnames(ligne_dfs3) <- col_names_s3
-
-  return(ligne_dfs3)
+  result$ID <- df_etud$ID[1]
+  result$Nom <- df_etud$Nom[1]
+  result$Prénom <- df_etud$Prénom[1]
+  
+  return(result)
 }
 
-# Calculer les données synthétiques pour chaque UE
-creer_ligne_unique_s4 <- function(df) {
-  # Fonction utilitaire pour extraire les données pour une UE spécifique
-  extraire_donnees <- function(df, ue_name, ecs) {
-    sous_df <- df %>% filter(UE == ue_name)
-    validation_ue <- unique(sous_df$Validation)
-    somme_ects <- sum(sous_df$ECTS, na.rm = TRUE)
-    moyenne_ue <- unique(sous_df$Moyenne_UE)
-    validation_ue <- ifelse(moyenne_ue >= 10, "Valide", "Non valide")
-    moyennes_ec <- sapply(ecs, function(ec) {
-      moyenne_ec <- sous_df %>% filter(EC == ec) %>% pull(Moyenne)
-      if (length(moyenne_ec) == 0) return(NA) else return(moyenne_ec)
+extraire_s4 <- function(df_etud) {
+  # Filtrage UE par semestre S4 (chaque nom contient STP04)
+  df_S4 <- df_etud %>% filter(grepl("UE-STP04", UE))
+  
+  # Fonction pour extraire informations d'une UE
+  extract_ue <- function(df, nom_ue, ec_order) {
+    data <- df %>% filter(UE == nom_ue)
+    res <- unique(data$Résultat)
+    ects <- sum(data$ECTS, na.rm = TRUE)
+    moy_ue <- unique(data$Moyenne_UE)
+    moy_ecs <- sapply(ec_order, function(x) {
+      m <- data %>% filter(CodeEC == x) %>% pull(Moyenne_EC)
+      if (length(m) == 0) return(NA) else return(m)
     })
-    return(c(validation_ue, somme_ects, moyenne_ue, moyennes_ec))
+    return(c(res, ects, moy_ue, moy_ecs))
   }
   
-  # Créer la ligne unique avec les données demandées
-  ligne_s4 <- c(
-    extraire_donnees(df, lesUE[2], lesEC_EXPS4),
-    extraire_donnees(df, lesUE[1], lesEC_FONDAS4),
-    extraire_donnees(df, lesUE[3], lesEC_ORTS4),
-    extraire_donnees(df, lesUE[4], lesEC_HUMAS4)
+  # Ordre demandé
+  ligne <- c(
+    extract_ue(df_S4, "Sciences expérimentales (UE-STP04-SE)", c("EC-STP04-CHIM","EC-STP04-ELMG","EC-STP04-MECA","EC-STP04-ONDE","EC-STP04-PHYS","EC-STP04-SI")),
+    extract_ue(df_S4, "Sciences fondamentales (UE-STP04-SF)", c("EC-STP04-GEOM","EC-STP04-INFO","EC-STP04-PROBA")),
+    extract_ue(df_S4, "Orientation et Transition (UE-STP04-ORT)", c("EC-STP04-PPI","EC-STP04-RIE","EC-STP04-TEDS")),
+    extract_ue(df_S4, "Humanité (UE-STP04-ENS / ENS-FIRE-FR / ENS-FIRE-NFR)", c("EC-STP04-ANGL","EC-STP04-COMM\nEC-STP04-FLE-COMM","EC-STP04-EPS","EC-STP04-LV2\nEC-STP04-FLE"))
   )
   
-  # Ajouter des noms de colonnes clairs
-  col_names_s4 <- c(
-    "Validation_EXP_S4", "Somme_ECTS_EXP_S4", "Moyenne_UE_EXP_S4", "Moyenne_CHIM", "Moyenne_ELMG",
-    "Moyenne_MECA", "Moyenne_ONDE", "Moyenne_PHYS", "Moyenne_SI",
-    "Validation_FONDA_S4", "Somme_ECTS_FONDA_S4", "Moyenne_UE_FONDA_S4", "Moyenne_GEOM",
-    "Moyenne_INFO", "Moyenne_PROBA",
-    "Validation_ORT_S4", "Somme_ECTS_ORT_S4", "Moyenne_UE_ORT_S4", "Moyenne_PPI",
-    "Moyenne_RIE", "Moyenne_TEDS",
-    "Validation_HUMA_S4", "Somme_ECTS_HUMA_S4", "Moyenne_UE_HUMA_S4", "Moyenne_ANGL",
-    "Moyenne_COMM", "Moyenne_EPS", "Moyenne_LV2"
+  # Nom des colonnes dans le bon ordre
+  noms_colonnes <- c(
+    "Res_EXP", "ECTS_EXP", "Moy_EXP", "Moy_Chimie", "Moy_ELMG", "Moy_MECA", "Moy_Onde", "Moy_PHYS", "Moy_SI",
+    "Res_FONDA", "ECTS_FONDA", "Moy_FONDA", "Moy_GEOM", "Moy_INFO", "Moy_PROBA",
+    "Res_ORT", "ECTS_ORT", "Moy_ORT", "Moy_PPI", "Moy_RIE", "Moy_TEDS",
+    "Res_HUMA", "ECTS_HUMA", "Moy_HUMA", "Moy_Ang", "Moy_Comm", "Moy_EPS", "Moy_LV2"
   )
   
-  # Transformer en DataFrame
-  ligne_dfs4 <- as.data.frame(t(ligne_s4), stringsAsFactors = FALSE)
+  result <- as.data.frame(t(ligne), stringsAsFactors = FALSE)
+  colnames(result) <- noms_colonnes
   
-  colnames(ligne_dfs4) <- col_names_s4
+  result$ID <- df_etud$ID[1]
+  result$Nom <- df_etud$Nom[1]
+  result$Prénom <- df_etud$Prénom[1]
   
-  return(ligne_dfs4)
+  return(result)
 }
+
+# Extraire les lignes, chaque ligne contient les résultats et moyennes pour le semestre 3
+df_list_s3 <- split(LesUE_notes, LesUE_notes$ID)
+resumes_s3 <- bind_rows(lapply(df_list_s3, extraire_s3)) %>%
+  select(ID, Nom, Prénom, everything())  # Mettre ID en tête
+
+# Extraire les lignes, chaque ligne contient les résultats et moyennes pour le semestre 4
+df_list_s4 <- split(LesUE_notes, LesUE_notes$ID)
+resumes_s4 <- bind_rows(lapply(df_list_s4, extraire_s4)) %>%
+  select(ID, Nom, Prénom, everything())  # Mettre ID en tête
