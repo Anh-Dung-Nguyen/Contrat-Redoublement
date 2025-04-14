@@ -34,7 +34,7 @@ LesUE_notes <- LesUE_notes %>%
   mutate(
     Résultat = case_when(
       is.na(Moyenne_UE) ~ "Non défini",
-      Moyenne_UE >= 10 ~ "Valide",
-      TRUE ~ "Non valide"
+      Moyenne_UE >= 10 ~ "VALIDE",
+      TRUE ~ "NON VALIDE"
     )
   )
