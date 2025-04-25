@@ -8,6 +8,7 @@ library(flextable)
 library(readxl)
 
 
+
 # j'ai ajoute cette ligne pour que le fichier MCC soit chargé, si vous avez
 # decomposé votre code avec server, ui, global, il suffit de la mettre dans
 # global.R
@@ -177,7 +178,7 @@ ecriture <- function(ft_notes, ft_sign){
 
 generation_df_notes <- function(nom,prenom){
   # récupération du fichier jury
-  fichier_jury <- "./jury.xlsx"
+  fichier_jury <- "jury.xlsx"
   
   # récupération des notes de l'étudiant·e
   notes_S3 <- notes_from_jury(fichier_jury, 2, col_S3, nom, prenom)
@@ -200,12 +201,15 @@ generation_df_notes <- function(nom,prenom){
 
 
 #génération du contrat
-generation <- function(nom, prenom, doc){
-  notes_etudiant <- generation_df_notes(nom, prenom)
+generation <- function(nom, prenom, doc, notes_etudiant = NULL){
+  # Si les notes modifiées ne sont pas fournies, on les génère normalement
+  if (is.null(notes_etudiant)) {
+    notes_etudiant <- generation_df_notes(nom, prenom)
+  }
   
   signature <- build_signature()
   
-  #création des flextable
+  # Création des flextables
   ft_notes <- flextable(notes_etudiant)
   ft_sign <- flextable(signature)
   
@@ -213,6 +217,7 @@ generation <- function(nom, prenom, doc){
   ft_sign <- build_ft_signature(ft_sign)
   
   doc <- ecriture(ft_notes, ft_sign)
+  print(paste("Contrat généré sous le nom :", doc))
 }
 
 
