@@ -79,8 +79,8 @@ server <- function(input, output, session) {
      #print(student)
      
      # Générer les notes et les stocker dans la valeur réactive
-     notes <- generation_df("Nom2", "Prenom2")
-     print("afficahge du tableau de notes")
+     notes <- generation_df_notes("Nom2", "Prenom2")
+     print("affichage du tableau de notes")
      print(notes)
      notes_reactives(notes)
    })
@@ -88,9 +88,9 @@ server <- function(input, output, session) {
    
     #Afficher les notes dans un tableau dynamique
     output$table_notes <- renderDT({
-      print("test de l'existence du tableua de notes")
+      print("test de l'existence du tableau de notes")
       req(notes_reactives())  # Vérifier que notes_reactives() n'est pas NULL
-      print("ok le tableau de notes existe, on peut l'affichee")
+      print("ok le tableau de notes existe, on peut l'afficher")
       datatable(notes_reactives(), options = list(pageLength = 10))
     })
 }
