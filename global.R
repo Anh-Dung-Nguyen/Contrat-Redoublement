@@ -3,9 +3,9 @@ library(ggplot2)
 library(dplyr)
 library(readxl)
 
-lesRedoublants <- data.frame(Nom = character(),
-                 Prénom = character(),
-                 stringsAsFactors = FALSE)
+#lesRedoublants <- data.frame(Nom = character(),
+#                 Prénom = character(),
+#                 stringsAsFactors = FALSE)
 lesContratsEt<- c()
 lesNomsEt<-c()
 
