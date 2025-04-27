@@ -9,6 +9,7 @@ library(readxl)
 lesContratsEt<- c()
 lesNomsEt<-c()
 
+notes_etudiants <- list()
 # Charger les fichiers ui et server
 source("ui.R")
 source("contrat_notes.R")

@@ -81,12 +81,13 @@ server <- function(input, output, session) {
     prenom <- student$prenom
     
     print(paste("Nom:", nom, "- Prénom:", prenom))
-    
+
     # Générer les notes et les stocker dans la valeur réactive
     notes <- generation_df_notes(nom, prenom)
-    print("afficahge du tableau de notes")
-    print(notes)
+    notes_etudiants[[paste(nom,prenom)]] <- notes
     notes_reactives(notes)
+    print("affichage du tableau de notes")
+    print(notes)
   })
   
   # Afficher les notes dans un tableau dynamique
@@ -95,13 +96,17 @@ server <- function(input, output, session) {
     req(notes_reactives())  # Vérifier que notes_reactives() n'est pas NULL
     print("ok le tableau de notes existe, on peut l'afficher")
     
-    df <- notes_reactives()
+    student <- selected_student()
+    nom <- student$nom
+    prenom <- student$prenom
     
+    notes <- notes_reactives()
+
     # On rend toutes les colonnes readonly par défaut...
-    table <- rhandsontable(df, readOnly = TRUE)
+    table <- rhandsontable(notes, readOnly = TRUE)
     
     # ... sauf la colonne "EcValRepasse" si elle existe
-    if ("EcValRepasse" %in% names(df)) {
+    if ("EcValRepasse" %in% names(notes)) {
       table <- hot_col(table, "EcValRepasse", readOnly = FALSE)
     }
     
@@ -111,8 +116,17 @@ server <- function(input, output, session) {
   # Mettre à jour la valeur réactive lorsque l'utilisateur modifie le tableau
   observeEvent(input$table_notes, {
     req(input$table_notes)
+    
+    student <- selected_student()
+    nom <- student$nom
+    prenom <- student$prenom
+    
+    # Récupérer les données modifiées dans le tableau
     updated_df <- hot_to_r(input$table_notes)
+    
     notes_reactives(updated_df)
+    # Mettre à jour la liste des notes de l'étudiant
+    notes_etudiants[[paste(nom, prenom)]] <- updated_df
   })
   
   
@@ -130,7 +144,7 @@ server <- function(input, output, session) {
     print(notes_reactives())
     
     # Récupérer les données modifiées
-    notes_modifiees <- notes_reactives()  
+    notes_modifiees <- notes_etudiants[[paste(nom, prenom)]]  
     
     fichier_sortie <- paste0("contrat_", nom, "_", prenom, ".docx")
     
