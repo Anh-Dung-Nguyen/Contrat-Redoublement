@@ -182,7 +182,7 @@ ecriture <- function(ft_notes, ft_sign){
 generation <- function(nom, prenom, doc){
   
   # récupération du fichier jury
-  fichier_jury <- "./jury.xlsx"
+  fichier_jury <- "./Liste+Bilan contrat/jury.xlsx"
   
   # récupération des notes de l'étudiant·e
   notes_S3 <- notes_from_jury(fichier_jury, 2, col_S3, nom, prenom)
@@ -226,4 +226,4 @@ doc <- read_docx()
 generation("Nom1","Prenom1",doc)
 
 # pour sauvegarder le document
-print(doc, target = "./contrat_notes_29_mars.docx")
+print(doc, target = "../Liste+Bilan contrat/contrat_notes_29_mars.docx")

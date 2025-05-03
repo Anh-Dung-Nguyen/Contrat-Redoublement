@@ -37,5 +37,5 @@ remplir_decision_finale <- function(file_path, sheet_name = "EnteteJury") {
   saveWorkbook(wb, file_path, overwrite = TRUE)
 }
 
-to_Entete("/home/nguyen-anh-dung/EnteteJury.xlsx", "EnteteJury", non_valides)
-remplir_decision_finale("/home/nguyen-anh-dung/EnteteJury.xlsx")
+to_Entete("./Liste+Bilan contrat/EnteteJury.xlsx", "EnteteJury", non_valides)
+remplir_decision_finale("./Liste+Bilan contrat/EnteteJury.xlsx")
