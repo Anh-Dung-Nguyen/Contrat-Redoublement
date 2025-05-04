@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.4.9)  3 MAY 2025 22:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.5.4)  4 MAY 2025 17:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -27,43 +27,52 @@ File: size11.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
 Package: babel 2024/01/07 v24.1 The Babel package
 \babel@savecnt=\count195
 \U@D=\dimen141
-\l@unhyphenated=\language5
+\l@unhyphenated=\language7
 
 (/usr/share/texlive/texmf-dist/tex/generic/babel/txtbabel.def)
 \bbl@readstream=\read2
 \bbl@dirlevel=\count196
 
-
-! Package babel Error: Unknown option 'french'. Either you misspelled it
-(babel)                or the language definition file french.ldf
-(babel)                was not found.
-(babel)                There is a locale ini file for this language.
-(babel)                If it’s the main language, try adding `provide=*'
-(babel)                to the babel package options.
-
-See the babel package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.4291 \ProcessOptions*
-                       
-Valid options are, among others: shorthands=, KeepShorthandsActive,
-activeacute, activegrave, noconfigs, safe=, main=, math=
-headfoot=, strings=, config=, hyphenmap=, or a language name.
-
-Package babel Info: You haven't specified a language as a class or package
-(babel)             option. I'll load 'nil'. Reported on input line 4342.
-(/usr/share/texlive/texmf-dist/tex/generic/babel/nil.ldf
-Language: nil 2024/01/07 v24.1 Nil language
-\l@nil=\language6
-)) (./exptech.sty
+(/usr/share/texlive/texmf-dist/tex/generic/babel-french/french.ldf
+Language: french 2023-12-19 v3.5r French support from the babel system
+Package babel Info: Hyphen rules for 'acadian' set to \l@french
+(babel)             (\language5). Reported on input line 91.
+Package babel Info: Hyphen rules for 'canadien' set to \l@french
+(babel)             (\language5). Reported on input line 92.
+\FB@stdchar=\count197
+Package babel Info: Making : an active character on input line 420.
+Package babel Info: Making ; an active character on input line 421.
+Package babel Info: Making ! an active character on input line 422.
+Package babel Info: Making ? an active character on input line 423.
+\FBguill@level=\count198
+\FBold@everypar=\toks17
+\FB@Mht=\dimen142
+\mc@charclass=\count199
+\mc@charfam=\count266
+\mc@charslot=\count267
+\std@mcc=\count268
+\dec@mcc=\count269
+\FB@parskip=\dimen143
+\listindentFB=\dimen144
+\descindentFB=\dimen145
+\labelindentFB=\dimen146
+\labelwidthFB=\dimen147
+\leftmarginFB=\dimen148
+\parindentFFN=\dimen149
+\FBfnindent=\dimen150
+))
+(/usr/share/texlive/texmf-dist/tex/generic/babel/locale/fr/babel-french.tex
+Package babel Info: Importing font and identification data for french
+(babel)             from babel-fr.ini. Reported on input line 11.
+)
+(/usr/share/texlive/texmf-dist/tex/latex/carlisle/scalefnt.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks18
+) (./exptech.sty
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
-Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
-\KV@toks@=\toks17
-)
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
 
@@ -78,16 +87,16 @@ Package graphics Info: Driver file: pdftex.def on input line 107.
 (/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def
 File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
 ))
-\Gin@req@height=\dimen142
-\Gin@req@width=\dimen143
+\Gin@req@height=\dimen151
+\Gin@req@width=\dimen152
 )
 (/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
 Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
 )
 (/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2021/02/14 v1.3d Input encoding file
-\inpenc@prehook=\toks18
-\inpenc@posthook=\toks19
+\inpenc@prehook=\toks19
+\inpenc@posthook=\toks20
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/latin1.def
 File: latin1.def 2021/02/14 v1.3d Input encoding file
@@ -535,7 +544,7 @@ Now handling font encoding U ...
 )))
 (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count197
+\l__color_backend_stack_int=\count270
 \l__pdf_internal_box=\box51
 )
 (./rapport.aux)
@@ -555,20 +564,22 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 18.
 LaTeX Font Info:    ... okay on input line 18.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 18.
 LaTeX Font Info:    ... okay on input line 18.
+LaTeX Info: Redefining \degres on input line 18.
+LaTeX Info: Redefining \up on input line 18.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count198
-\scratchdimen=\dimen144
+\scratchcounter=\count271
+\scratchdimen=\dimen153
 \scratchbox=\box52
-\nofMPsegments=\count199
-\nofMParguments=\count266
-\everyMPshowfont=\toks20
-\MPscratchCnt=\count267
-\MPscratchDim=\dimen145
-\MPnumerator=\count268
-\makeMPintoPDFobject=\count269
-\everyMPtoPDFconversion=\toks21
+\nofMPsegments=\count272
+\nofMParguments=\count273
+\everyMPshowfont=\toks21
+\MPscratchCnt=\count274
+\MPscratchDim=\dimen154
+\MPnumerator=\count275
+\makeMPintoPDFobject=\count276
+\everyMPtoPDFconversion=\toks22
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -596,38 +607,15 @@ File: images/signature.jpg Graphic file (type jpg)
 <use images/signature.jpg>
 Package pdftex.def Info: images/signature.jpg  used on input line 17.
 (pdftex.def)             Requested size: 398.33858pt x 130.7609pt.
-) (./bilan.tex [1
+) (./generation_bilan.tex [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 7
+.
 
-! LaTeX Error: There's no line here to end.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.10 D
-      e plus, nous avons réalisé une interface graphique permettant :
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-[2 <./images/contrat_vierge.jpg> <./images/signature.jpg>]
-
-! LaTeX Error: There's no line here to end.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.19 D
-      e plus, notre code s'adapte automatiquement aux modifications apporté...
-
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-)
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
+File: t1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
+) [2 <./images/contrat_vierge.jpg> <./images/signature.jpg>]) (./bilan.tex)
 No file rapport.bbl.
 [3] (./rapport.aux)
  ***********
@@ -636,26 +624,28 @@ L3 programming layer <2024-01-22>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 2651 strings out of 476182
- 43830 string characters out of 5795596
+ 3486 strings out of 476153
+ 57887 string characters out of 5794327
  1930975 words of memory out of 5000000
- 24643 multiletter control sequences out of 15000+600000
- 569208 words of font info for 57 fonts, out of 8000000 for 9000
+ 25469 multiletter control sequences out of 15000+600000
+ 570640 words of font info for 59 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 72i,6n,79p,250b,214s stack positions out of 10000i,1000n,20000p,200000b,200000s
- </home/yaelle/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1095.60
-0pk> </home/yaelle/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1200.
-600pk> </home/yaelle/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm109
-5.600pk> </home/yaelle/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1
-440.600pk> </home/yaelle/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ecr
-m1000.600pk> </home/yaelle/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/e
-cbx1000.600pk> </home/yaelle/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec
-/ecrm1200.600pk> </home/yaelle/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/
-ec/ecbx1728.600pk>
-Output written on rapport.pdf (3 pages, 133157 bytes).
+ 72i,6n,79p,643b,428s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ </home/huyhoang/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1095.
+600pk> </home/huyhoang/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1
+095.600pk> </home/huyhoang/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/e
+ccc1095.600pk> </home/huyhoang/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/
+ec/ecbx1200.600pk> </home/huyhoang/.texlive2023/texmf-var/fonts/pk/ljfour/jknap
+pen/ec/ecrm1095.600pk> </home/huyhoang/.texlive2023/texmf-var/fonts/pk/ljfour/j
+knappen/ec/ecbx1440.600pk> </home/huyhoang/.texlive2023/texmf-var/fonts/pk/ljfo
+ur/jknappen/ec/ecrm1000.600pk> </home/huyhoang/.texlive2023/texmf-var/fonts/pk/
+ljfour/jknappen/ec/ecbx1000.600pk> </home/huyhoang/.texlive2023/texmf-var/fonts
+/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/huyhoang/.texlive2023/texmf-var/f
+onts/pk/ljfour/jknappen/ec/ecbx1728.600pk>
+Output written on rapport.pdf (3 pages, 152389 bytes).
 PDF statistics:
- 197 PDF objects out of 1000 (max. 8388607)
- 41 compressed objects within 1 object stream
+ 268 PDF objects out of 1000 (max. 8388607)
+ 49 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  11 words of extra memory for PDF output out of 10000 (max. 10000000)
 

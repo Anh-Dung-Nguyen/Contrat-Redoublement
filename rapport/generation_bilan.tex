@@ -1,0 +1,24 @@
+\subsection{Filtrage des étudiants redoublants et génération des contrats}
+
+Dans le cadre de ce projet, nous avons développé un ensemble de scripts R visant à automatiser le processus de génération des contrats de redoublement à partir des données du jury. Ce processus se déroule en plusieurs étapes distinctes.
+
+\subsubsection{Filtrage des étudiants redoublants}
+
+La première étape consiste à écrire un script nommé \texttt{filtrer.R}. Ce script permet d'identifier les étudiants susceptibles de redoubler, en se basant sur les données issues du fichier \texttt{entete\_jury.csv}. Il est important de noter que les simples moyennes présentes dans le fichier \texttt{jury.xlsx} ne suffisent pas à déterminer les cas de redoublement ; d'autres critères doivent être pris en compte, d'où l'utilisation de ce filtrage préalable.
+
+\subsubsection{Génération des contrats}
+
+Une fois les étudiants redoublants identifiés, nous utilisons un second script appelé \texttt{listeContratAlgo.R}. Ce dernier automatise l’appel à la fonction \texttt{generation()} définie dans le fichier \texttt{contrat\_notes.R}. Cette boucle permet de générer individuellement un contrat de redoublement pour chaque étudiant concerné, en utilisant les données du fichier \texttt{jury}.
+
+\subsubsection{Production des bilans}
+
+Enfin, une fois l’ensemble des contrats généré, nous produisons des bilans synthétiques à l’aide d’un script final. Ces bilans sont générés pour :
+\begin{itemize}
+    \item le semestre 3 (S3),
+    \item le semestre 4 (S4),
+    \item et l’ensemble de l’année.
+\end{itemize}
+
+Ces bilans contiennent la liste des étudiants redoublants ainsi que les unités d’enseignement qu’ils devront repasser lors de la prochaine année universitaire. Ils constituent un outil précieux pour l’administration pédagogique dans le suivi des parcours étudiants.
+
+ 
