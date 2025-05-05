@@ -1,17 +1,14 @@
 source("contrat_notes.R")
 source("RecupererNomPrenom.R")
-library(readxl)
-
-
-for (i in 1:length(names_vector)){
+source("filterRedoublement.R")
+for (j in indice_redoublements_vector){
   doc <- read_docx()
-  
+  name_of_contrat<-paste0("./ListeContrats+Bilan/contrat_notes_",names_surnames_vector_unique[j],".docx")
+  j <- as.character(j)
   #génération du contrat
-  generation(names_vector[i],surnames_vector[i],doc)
-  
-  name_of_contrat<-paste0("./ListeContrats+Bilan/contrat_notes_",names_vector[i],"_",surnames_vector[i],".docx")
-  
+  generation(j,doc)
   # pour sauvegarder le document
   print(doc, target = name_of_contrat)
-  
 }
+
+

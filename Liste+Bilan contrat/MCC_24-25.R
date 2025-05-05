@@ -5,8 +5,8 @@ lesUE<-c("Sciences Fondamentales","Sciences Expérimentales","Orientation et Tra
 # -----------------   definition des constantes pour l'UE Sciences Fondamentales ----------------
 
 #colonnes correspondant à l'UE FONDA dans le fichier jury (début:fin)
-col_FONDAS3 <- 14:17
-col_FONDAS4 <- 15:17
+col_FONDAS3 <- 15:18
+col_FONDAS4 <- 16:18
 
 #UE Fonda 3
 lesEC_FONDAS3<-c("Algèbre 3","Analyse 3","Informatique 2","Mécanique 3")
@@ -60,8 +60,8 @@ tableauEC_Fonda4<-cbind(UE=rep("Sciences fondamentales (UE-STP04-SF)",3),
                         
 # -----------------   defintion des constantes pour l'UE Sciences Expérimentales ----------------
 #colonnes correspondant à l'UE Sciences Expérimentales dans le fichier jury (début:fin)
-col_EXPS3 <- (6:10)
-col_EXPS4 <- (6:11)
+col_EXPS3 <- (7:11)
+col_EXPS4 <- (7:12)
 
 #UE EXP 3
 lesEC_EXPS3<-c("Systemes Automatisés","Chimie 3","Electronique 1","TP Physique 3","Thermo-énergétique")
@@ -119,8 +119,8 @@ tableauEC_EXP4<-cbind(UE=rep("Sciences expérimentales (UE-STP04-SE)",6),
 
 # -----------------   defintion des constantes pour l'UE Orientation et Transition ----------------
 #colonnes correspondant à l'UE ORT dans le fichier jury (début:fin)
-col_ORTS3 <- 25:28
-col_ORTS4 <- 21:23
+col_ORTS3 <- 26:29
+col_ORTS4 <- 22:24
 
 #UE ORT 3
 lesEC_ORTS3<-c("ADS","PPI 3","RIE","TEDS 3")
@@ -178,8 +178,8 @@ tableauEC_SORT4<-cbind(UE=rep("Orientation et Transition (UE-STP04-ORT)",3),
 # -----------------   defintion des constantes pour l'UE HUMA ----------------
 
 #colonnes correspondant à l'UE HUMA dans le fichier jury (début:fin)
-col_HUMAS3 <- 32:35
-col_HUMAS4 <- 27:30
+col_HUMAS3 <- 33:36
+col_HUMAS4 <- 28:31
 
 #UE HUMA 3
 lesEC_HUMA_S3<-c("Anglais 3","Culture et Communication 3\nFLE Comm","EPS 3","Module à choix S3 (LV2-FLE)")
@@ -224,7 +224,7 @@ tableauEC_HUMA4<-cbind(UE=rep("Humanité (UE-STP04-ENS / ENS-FIRE-FR / ENS-FIRE-
 
 # -----------------   defintion des constantes pour l'UE Stage ----------------
 #colonnes correspondant à l'UE HUMA dans le fichier jury (début:fin)
-col_STAGE <- 21
+col_STAGE <- 22
 
 lesEC_Stage<-c("Stage")
 lesCodes_Stage<-c("EC-STP03-STAG")
@@ -289,8 +289,8 @@ col_S3 <- c(col_EXPS3, col_FONDAS3, col_STAGE, col_ORTS3, col_HUMAS3)
 col_S4 <- c(col_EXPS4, col_FONDAS4, col_ORTS4, col_HUMAS4)
 
 #numéros des colonnes contenant le résultat de chaque UE (VALIDE, NON VALIDE, VALIDE COMP)
-col_val_S3 <- c(3,11,18,22,29)
-col_val_S4 <- c(3,12,18,24)
+col_val_S3 <- c(4,12,19,23,30)
+col_val_S4 <- c(4,13,19,25)
 
 #tableau permettant de merge les cases des UE
 nb_EC <- function(tab){

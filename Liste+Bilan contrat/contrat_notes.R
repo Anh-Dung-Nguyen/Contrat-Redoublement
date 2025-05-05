@@ -7,30 +7,27 @@ library(dplyr)
 library(flextable)
 library(readxl)
 
-
 # j'ai ajoute cette ligne pour que le fichier MCC soit chargé, si vous avez
 # decomposé votre code avec server, ui, global, il suffit de la mettre dans
 # global.R
-
-
 source("MCC_24-25.R")
 
 
 # renvoie les notes de l'élève nom prenom du semestre associé à la feuille de l'excel fichier
-notes_from_jury <- function(fichier, feuille, colonnes, nom, prenom){
+notes_from_jury <- function(fichier, feuille, colonnes, id){
   semestre <- read_excel(fichier, sheet = feuille, col_types = "text")
-  notes <- semestre[semestre[[1]] == nom & semestre[[2]] == prenom, colonnes]
+  notes <- semestre[semestre[[1]] == id, colonnes]
   return(unlist(notes[rowSums(is.na(notes)) != ncol(notes), ]))
 }
 
 #renvoie les validations ou non de chaque UE pour un semestre
-valide_UE <- function(fichier, feuille, col_val, nom, prenom){
+valide_UE <- function(fichier, feuille, col_val, id){
   semestre <- read_excel(fichier, sheet = feuille, col_types = "text")
-  validations <- semestre[semestre[[1]] == nom & semestre[[2]] == prenom, col_val]
+  
+  validations <- semestre[semestre[[1]] == id, col_val]
   return(unlist(validations[rowSums(is.na(validations)) != ncol(validations), ]))
 }
 
-##### comment c'est écrit quand l'EC est en validation?? majusucle, minuscule?
 # renvoie un vecteur contenant des croix si l'ec n'est pas validé
 croix <- function(notes,validation){
   croix <- c()
@@ -118,9 +115,9 @@ build_ft_notes <- function(ft){
         Ue = "UE (code UE)",
         Ec = "EC",
         CodeEC = "Code EC",
-        Moyennes = "EC 2023-2024 (Moyenne obtenue)",
-        EcValRepasse = "EC validé mais repassé en 2024-2025",
-        EcAVal = "EC à valider en 2024-2025"
+        Moyennes = "EC 2024-2025 (Moyenne obtenue)",
+        EcValRepasse = "EC validé mais repassé en 2025-2026",
+        EcAVal = "EC à valider en 2025-2026"
       )%>%
       
       # choix de la largeur des colonnes
@@ -154,13 +151,13 @@ titre <- function(){
 
 
 # pour remplir le document Word avec du texte et les flextables
-ecriture <- function(ft_notes, ft_sign){
+ecriture <- function(ft_notes, ft_sign, nom_prenom){
   return(
     doc %>% 
     body_add_par("") %>%
     body_add_fpar(titre()) %>%
     body_add_par("") %>%
-    body_add_par("Nom et prénom de l'étudiant·e :", style = "Normal") %>%
+    body_add_par(paste("Nom et prénom de l'étudiant·e :", nom_prenom), style = "Normal") %>%
     body_add_par("Semestre : ☐ 3    ☐ 4 \t\t Année complète : ☐", style = "Normal") %>%
     body_add_par("Motif de l'établissement du présent contrat :", style = "Normal") %>%
     body_add_par("\t☐ SHN \t☐ Redoublement \t☐ Redoublement de Cas de Force Majeure", style = "Normal") %>%
@@ -176,31 +173,50 @@ ecriture <- function(ft_notes, ft_sign){
   )
 }
 
-
-### séparer génération dataframe et génération du doc
-#génération du contrat
-generation <- function(nom, prenom, doc){
-  
+generation_df_notes <- function(id){
   # récupération du fichier jury
-  fichier_jury <- "./Liste+Bilan contrat/jury.xlsx"
+  fichier_jury <- "./jury.xlsx"
   
   # récupération des notes de l'étudiant·e
-  notes_S3 <- notes_from_jury(fichier_jury, 2, col_S3, nom, prenom)
-  notes_S4 <- notes_from_jury(fichier_jury, 3, col_S4, nom, prenom)
+  notes_S3 <- notes_from_jury(fichier_jury, 2, col_S3, id)
+  notes_S4 <- notes_from_jury(fichier_jury, 3, col_S4, id)
   notes <- c(notes_S3, notes_S4)
   
   #récupération des validations des UE de l'étudiant·e
-  val_S3 <- valide_UE(fichier_jury, 2, col_val_S3, nom, prenom)
-  val_S4 <- valide_UE(fichier_jury, 3, col_val_S4, nom, prenom)
+  val_S3 <- valide_UE(fichier_jury, 2, col_val_S3, id)
+  val_S4 <- valide_UE(fichier_jury, 3, col_val_S4, id)
   val <- c(val_S3, val_S4)
   
   #pour mettre des croix si l'EC n'est pas validé ou n'a pas de note
   croix <- croix(notes, val)
-
-  #création des dataframes
-  notes_etudiant <<- build_notes_etudiant(notes, croix)
   
-  #return (notes_etudiant)
+  #création des dataframes
+  notes_etudiant <- build_notes_etudiant(notes, croix)
+  
+  # Ajout dans la liste globale
+  #notes_etudiants[[id]] <- notes_etudiant
+  
+  return (notes_etudiant)
+}
+
+nom_prenom <- function(id){
+  fichier_jury <- "./jury.xlsx"
+  semestre <- read_excel(fichier_jury, sheet = 2, col_types = "text")
+  nom <- semestre[semestre[[1]] == id, 2]
+  nom <- unlist(nom[rowSums(is.na(nom)) != ncol(nom), ])
+  
+  prenom <- semestre[semestre[[1]] == id, 3]
+  prenom <- unlist(prenom[rowSums(is.na(prenom)) != ncol(prenom), ])
+
+  return(paste(nom,prenom))
+}
+
+
+#génération du contrat
+generation <- function(id, doc){
+  nom_prenom <- nom_prenom(id)
+  
+  notes_etudiant <- generation_df_notes(id)
   
   signature <- build_signature()
   
@@ -211,11 +227,8 @@ generation <- function(nom, prenom, doc){
   ft_notes <- build_ft_notes(ft_notes)
   ft_sign <- build_ft_signature(ft_sign)
   
-  doc <- ecriture(ft_notes, ft_sign)
+  ecriture(ft_notes, ft_sign, nom_prenom)
 }
-
-
-
 
 
 
@@ -223,7 +236,7 @@ generation <- function(nom, prenom, doc){
 doc <- read_docx()
 
 #génération du contrat
-generation("Nom1","Prenom1",doc)
+generation("1",doc)
 
 # pour sauvegarder le document
-print(doc, target = "../Liste+Bilan contrat/contrat_notes_29_mars.docx")
+print(doc, target = "./contrat_notes_3_mai.docx")
