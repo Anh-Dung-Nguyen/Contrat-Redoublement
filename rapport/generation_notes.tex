@@ -1,12 +1,4 @@
-\documentclass{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[french]{babel}
-\usepackage{graphicx} % Required for inserting images
-
-\begin{document}
-
-\section{Génération des notes}
+\subsection{Génération des notes}
 
 Après avoir présenté les outils mobilisés pour la réalisation du projet, nous abordons ici la première fonctionnalité développée : la génération automatique des notes. Cette étape était cruciale car elle nous a permis de tester et de valider l’ensemble des autres modules (génération de contrats pédagogiques, production des bilans de notes, interface utilisateur), sans recourir à des données réelles potentiellement sensibles ou incomplètes.
 
@@ -18,7 +10,7 @@ Pour une exploitation plus ciblée des résultats, nous avons ensuite développ�
 
 Enfin, cette fonctionnalité de génération de notes s’intègre directement aux autres modules du projet. Elle sert de base de données commune pour la génération des contrats pédagogiques des étudiants redoublants, pour l’établissement des bilans individuels, et pour le suivi global des validations.
 
-\section{Entête Jury}
+\subsection{Entête Jury}
 
 La partie intitulée \textit{Entête Jury} a pour objectif de générer une synthèse des étudiants n’ayant pas validé leur année universitaire, en vue d’une délibération par le jury pédagogique. Cette synthèse est produite sous la forme d’un fichier Excel structuré, listant les étudiants concernés avec leurs informations d’identification, ainsi qu’une proposition de décision finale.
 
@@ -32,4 +24,3 @@ Enfin, la fonction \texttt{remplir\_decision\_finale} complète ce tableau en g�
 
 En conclusion, cette partie du code automatise efficacement la génération de la liste des étudiants en difficulté académique, et propose un modèle de tableau conforme aux attentes d’un jury. Néanmoins, la partie concernant les décisions finales gagnerait à être améliorée en remplaçant le tirage au sort par des règles pédagogiques plus cohérentes, fondées sur les moyennes ou les crédits obtenus. Il pourrait aussi être utile d'ajouter des colonnes de justification ou de remarques pour enrichir l’analyse lors de la réunion de jury.
 
-\end{document}
