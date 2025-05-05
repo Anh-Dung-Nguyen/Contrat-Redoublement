@@ -29,17 +29,30 @@ TODO
 \end{abstract}
 
 \section*{Introduction}
-	Attention, le max est de 8 pages tout compris !
+	Notre encadrante, Laurence Roze, est, depuis l'an dernier, repsonsable des deuxièmes années au département Sciences et Techniques Pour l'Ingénieur (STPI) à l'INSA. Cette fonction l'amène à la gérer l'ensemble de la pormotion afin de veiller à son bon encadrement. Cela implique notamment la gestion des contrats de redoublement, la création des emplois du temps, la répartition des élèves par groupes, ... À sa prise de poste, Mme Rozé s'est rendue compte que, peu, voire aucunes de ces opérations n'étaient automatisée, ce qui demande donc un travail long et fastidieux, pouvant amener à des erreurs. Dans le cas des contrats de redoublements, les notes étaient écrites manuellement dans les contrats, ce qui pouvait amener à des erreurs de saisie. C'est dans ce contexte que Mme Roze nous a demandé de déveloper un outil capable d'automatiser le processus de création des contrats de redoublement. Ce dernier devait, à partir du fichier de jury, fichier récapitulatif des notes de tous les étudiants de la promotion, du fichier d'en-tête, regroupant les décisions du jury de fin d'année, et d'un fichier de constantes, descriptif de la maquette, générer un contrat vierge, le contrat de tous les étudiants redoublants et un fichier récapitulatif des matières suivies l'année d'après par chaque étudiant. Ce rapport détaillera les différentes étapes de la conception de notre outil, NoteR, ainsi que l'enjeu de chacunes d'elles, depuis les outils utilisés jusqu'à la conception de l'outil en lui-même et des choix qui l'ont accompagné.
 
-\section{Outils}
-  %\input{"outils.tex"}
+\section{Outils utilisés}
+\subsection{Langage de programmation }
+    L'intégralité de NoteR est codée en R. Cette contrainte était imposée dans le sujet et ce choix peut être motivé par plusieurs raisons :
+        \begin{itemize}
+            \item NoteR doit s'intégrer dans un outil préexistant développé en R par Mme Rozé,
+            \item R est un langage de programmation qui n'est pas aussi régulièrement mis à jour que d'autres langages, ce qui permet d'assurer la longévité de NoteR,
+            \item  R est un langage traditionnellmeent utilisé pour les statistiques et Mme Rozé voulait se laisser la possibilité dans le futur de calculer des statistiques sur les redoublants de deuxième année.
+        \end{itemize}
+        Nous avons ainsi utilisé plusieurs libraries de R et particulièrement, pour la conception de l'interface graphique de NoteR, la librairie RShiny.
+\subsection{Outils collaboratifs }
+    Afin de faciliter la gestion du projet et notamment les mises à jour du code, nous avons choisi d'utiliser la plateforme GitHub, qui permet à tous les membres du projet d'avoir accès en temps réel à la dernière version du code mise en ligne. De plus, n'étant au début pas très à l'aise avec cet outil, nous avons préféré utiliser Google Drive pour tous les documents annexes comme les comptes-rendus de réunion ou le suivi des tâches.
   
 \section{Génération notes }	
 
 \section{Génération contrats redoublant.es}
   \input{"generation_contrat.tex"}
 
-\section{Interface }
+\section{Interface graphique }	
+
+    À mesure de l'avancée du projet et après avoir discuté avec Mme Rozé de l'utilisation future de NoteR, nous avons convenu de développer une interface graphique. En effet, même si ce n'était pas demandé dans les contraintes initiales,  dans une démarche d'améliorations de l'outil pour une utilisation par un futur responsable d'année non-informaticien, nous pensons que c'est le meilleur moyen de le rendre intuitif et facile d'utilisation. Nous avons donc regroupé les différentes fonctions en 4 boutons : un  pour générer le tableau contenant les notes de l'étudiant sur lequel on peut rajouter à la main les croix correspondant aux EC déjà validés mais qui seront repassés l'année suivante, un pour la génération du contrat de l'étuidiant sélectionné, un pour la génération de l'ensemble des contrats des redoublants de deuxième année et enfin un pour la génération du fichier récpitulatif. Cette interface ne prend en entrée que le fichier d'en-tête, afin de récupérer la liste des étudiants redoublants et le fichier de jury, nécessaire à la création du tableau de notes de l'étudiant courant. L'interface permet donc de générer facilement l'ensemble des sorties attendues et minimise le risque d'erreur humaine.
+
+    (Image de l'interface à insérer quand elle sera finie)
 
 \section{Génération du bilan }
  \input{generation_bilan.tex}
