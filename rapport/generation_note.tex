@@ -1,0 +1,35 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx} % Required for inserting images
+
+\begin{document}
+
+\section{Génération des notes}
+
+Après avoir présenté les outils mobilisés pour la réalisation du projet, nous abordons ici la première fonctionnalité développée : la génération automatique des notes. Cette étape était cruciale car elle nous a permis de tester et de valider l’ensemble des autres modules (génération de contrats pédagogiques, production des bilans de notes, interface utilisateur), sans recourir à des données réelles potentiellement sensibles ou incomplètes.
+
+Dans le cadre de notre projet, nous avons donc mis en place un système de génération aléatoire de notes fictives pour simuler les résultats d’un ensemble d’étudiants sur plusieurs unités d’enseignement (UE), réparties entre les semestres 3 (S3) et 4 (S4). Le principe repose sur la création de trois colonnes de notes – \textit{Évaluation 1}, \textit{Évaluation 2} et \textit{Évaluation 3} – correspondant aux différents types d’évaluation utilisés dans la maquette pédagogique (DS, CC, TP, etc.). Les valeurs sont générées de manière pseudo-aléatoire sous forme de nombres décimaux compris entre 0 et 20, arrondis à deux chiffres après la virgule.
+
+Une fois ces notes générées, nous procédons à une première agrégation au niveau de chaque élément constitutif (EC) par le calcul d’une moyenne simple des évaluations disponibles. Ces moyennes sont ensuite agrégées par UE en utilisant une pondération basée sur les crédits ECTS de chaque EC. Cela permet d’obtenir une moyenne pondérée pour chaque UE. À partir de cette moyenne, une validation automatique est attribuée : l’UE est marquée comme \textbf{« VALIDE »} si la moyenne est supérieure ou égale à 10, et \textbf{« NON VALIDE »} dans le cas contraire.
+
+Pour une exploitation plus ciblée des résultats, nous avons ensuite développé deux fonctions spécifiques aux semestres S3 et S4, afin d’organiser les données par période académique. Chaque ligne de résultat regroupe, pour un étudiant donné, les moyennes des EC dans un ordre prédéfini, la moyenne de chaque UE, le total de crédits ECTS validés, ainsi que l’état de validation de l’UE. Cette structure facilite considérablement la lecture et l’analyse des résultats, notamment lors des délibérations du jury. Les données ainsi préparées peuvent être automatiquement exportées dans un fichier Excel nommé \texttt{jury.xlsx}, avec une feuille distincte pour chaque semestre.
+
+Enfin, cette fonctionnalité de génération de notes s’intègre directement aux autres modules du projet. Elle sert de base de données commune pour la génération des contrats pédagogiques des étudiants redoublants, pour l’établissement des bilans individuels, et pour le suivi global des validations.
+
+\section{Entête Jury}
+
+La partie intitulée \textit{Entête Jury} a pour objectif de générer une synthèse des étudiants n’ayant pas validé leur année universitaire, en vue d’une délibération par le jury pédagogique. Cette synthèse est produite sous la forme d’un fichier Excel structuré, listant les étudiants concernés avec leurs informations d’identification, ainsi qu’une proposition de décision finale.
+
+Le processus commence par la validation des étudiants par semestre, à l’aide de la fonction \texttt{valider\_etudiant\_par\_semestre}. Celle-ci filtre les unités d’enseignement (UE) relevant d’un semestre donné (S3 ou S4) et les classe selon leur type pédagogique (fondamentales, expérimentales, humaines, orientation ou stage). Elle calcule ensuite les moyennes pondérées par type d’UE, en tenant compte des crédits ECTS. Une moyenne combinée, appelée \texttt{Moy\_FonExp}, est calculée sur les blocs fondamentaux et expérimentaux. L'étudiant est considéré comme \textit{Valide} si toutes les moyennes exigées sont supérieures ou égales à 10, conformément aux critères spécifiques de chaque semestre. Cette validation est appliquée séparément pour le semestre 3 (\texttt{validation\_globale\_s3}) et le semestre 4 (\texttt{validation\_globale\_s4}).
+
+Ensuite, la fonction \texttt{lister\_etudiants\_non\_valides} fusionne les résultats des deux semestres afin d’identifier les étudiants non validés sur l’année. Un étudiant est considéré comme non validé s’il échoue à l’un des deux semestres. Les données personnelles (ID, nom, prénom) sont extraites à partir du fichier source contenant les notes (\texttt{LesUE\_notes}) pour compléter les informations. Le résultat est une liste synthétique des étudiants à examiner en jury, enregistrée dans l’objet \texttt{non\_valides}.
+
+Une fois cette liste constituée, la fonction \texttt{to\_Entete} se charge de l’exporter dans un fichier Excel, dans la feuille nommée \texttt{EnteteJury}. Chaque ligne du fichier contient les identifiants des étudiants non validés, à partir de la deuxième ligne du tableau (afin de préserver les en-têtes). Cela permet de générer automatiquement un document exploitable par l’administration ou les enseignants responsables du jury.
+
+Enfin, la fonction \texttt{remplir\_decision\_finale} complète ce tableau en générant aléatoirement une décision finale pour chaque étudiant listé : \textit{Passe}, \textit{Red} (redoublement), ou \textit{Exclu}. Ces décisions sont écrites dans la colonne R du fichier Excel. Bien que cette méthode d’attribution soit purement aléatoire (à des fins de test ou de simulation), elle illustre le format attendu pour cette colonne dans un cadre plus officiel.
+
+En conclusion, cette partie du code automatise efficacement la génération de la liste des étudiants en difficulté académique, et propose un modèle de tableau conforme aux attentes d’un jury. Néanmoins, la partie concernant les décisions finales gagnerait à être améliorée en remplaçant le tirage au sort par des règles pédagogiques plus cohérentes, fondées sur les moyennes ou les crédits obtenus. Il pourrait aussi être utile d'ajouter des colonnes de justification ou de remarques pour enrichir l’analyse lors de la réunion de jury.
+
+\end{document}
