@@ -58,8 +58,6 @@ server <- function(input, output, session) {
     req(nrow(lesRedoublants) > 0)
     
     choices <- paste(toupper(lesRedoublants$Nom), lesRedoublants$Prénom)
-    #print("affichage des choix")
-    #print(choices)
     selectInput("select_value", "Choisir un étudiant redoublant",
                 choices = choices)
   })
@@ -79,16 +77,25 @@ server <- function(input, output, session) {
     
     nom <- student$nom
     prenom <- student$prenom
+    cle <- paste(nom,prenom)
     
     print(paste("Nom:", nom, "- Prénom:", prenom))
 
     # Générer les notes et les stocker dans la valeur réactive
-    notes <- generation_df_notes(nom, prenom)
-    notes_etudiants[[paste(nom,prenom)]] <- notes
+    if(is.null(notes_etudiants[[cle]])){
+      notes <- generation_df_notes(1)
+      notes_etudiants[[cle]] <<- notes
+    }else {
+      notes <- notes_etudiants[[cle]]
+    }
+    
+    if ("EcValRepasse" %in% names(notes)) {
+      notes$EcValRepasse <- as.character(notes$EcValRepasse)
+    }
     notes_reactives(notes)
     print("affichage du tableau de notes")
-    print(notes)
   })
+  
   
   # Afficher les notes dans un tableau dynamique
   output$table_notes <- renderRHandsontable({
@@ -124,9 +131,16 @@ server <- function(input, output, session) {
     # Récupérer les données modifiées dans le tableau
     updated_df <- hot_to_r(input$table_notes)
     
+    if ("EcValRepasse" %in% names(updated_df)) {
+      updated_df$EcValRepasse <- as.character(updated_df$EcValRepasse)
+    }
+    
     notes_reactives(updated_df)
     # Mettre à jour la liste des notes de l'étudiant
-    notes_etudiants[[paste(nom, prenom)]] <- updated_df
+    notes_etudiants[[paste(nom, prenom)]] <<- updated_df
+    print(paste("sauvegarde pour : ",nom,prenom))
+    print(head(updated_df))
+    print(head(notes_reactives()))
   })
   
   
@@ -150,7 +164,9 @@ server <- function(input, output, session) {
     
     # Appeler la fonction de génération du contrat
     tryCatch({
-      generation(nom, prenom, fichier_sortie, notes_etudiant = notes_modifiees)
+      doc <- read_docx()
+      doc <- generation(1, doc, notes_etudiant = notes_modifiees)
+      print(doc, target = fichier_sortie)
       showNotification(paste("Contrat généré pour", prenom, nom), type = "message")
     }, error = function(e) {
       showNotification(paste("Erreur lors de la génération du contrat : ", e$message), type = "error")
