@@ -213,14 +213,17 @@ nom_prenom <- function(id){
 
 
 #génération du contrat
-generation <- function(id, doc){
+generation <- function(id, doc, notes_etudiant = NULL){
   nom_prenom <- nom_prenom(id)
   
-  notes_etudiant <- generation_df_notes(id)
+  # Si les notes modifiées ne sont pas fournies, on les génère normalement
+  if (is.null(notes_etudiant)) {
+    notes_etudiant <- generation_df_notes(id)
+  }
   
   signature <- build_signature()
   
-  #création des flextable
+  #Création des flextables
   ft_notes <- flextable(notes_etudiant)
   ft_sign <- flextable(signature)
   
