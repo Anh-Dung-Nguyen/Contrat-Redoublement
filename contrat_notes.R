@@ -115,9 +115,9 @@ build_ft_notes <- function(ft){
         Ue = "UE (code UE)",
         Ec = "EC",
         CodeEC = "Code EC",
-        Moyennes = "EC 2024-2025 (Moyenne obtenue)",
-        EcValRepasse = "EC validé mais repassé en 2025-2026",
-        EcAVal = "EC à valider en 2025-2026"
+        Moyennes = paste("EC ", annee_courante, " (Moyenne obtenue)"),
+        EcValRepasse = paste("EC validé mais repassé en ", annee_suivante),
+        EcAVal = paste("EC à valider en ", annee_suivante)
       )%>%
       
       # choix de la largeur des colonnes
@@ -242,4 +242,4 @@ doc <- read_docx()
 generation("1",doc)
 
 # pour sauvegarder le document
-print(doc, target = "./contrat_notes_3_mai.docx")
+print(doc, target = "./contrat_notes_9_mai.docx")

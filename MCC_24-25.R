@@ -278,6 +278,11 @@ coefOPTS4<-c(1)
 LesUE<-rbind(tableauEC_EXP3,tableauEC_Fonda3,tableauEC_Stage3,tableauEC_SORT3, tableauEC_HUMA3,tableauEC_EXP4,tableauEC_Fonda4,tableauEC_SORT4, tableauEC_HUMA4)
 
 # -------------------constantes pour la création du contrat -------------------
+#pour avoir l'année courant et la prochaine
+annee_actuelle <- as.numeric(format(Sys.Date(), "%Y"))
+annee_courante <- paste0(annee_actuelle - 1, "-", annee_actuelle)
+annee_suivante   <- paste0(annee_actuelle, "-", annee_actuelle + 1)
+
 #nom de le.a directeur.ice du département
 direction_departement <- "Signature de la Directrice du département : Carole Daiguebonne"
 
