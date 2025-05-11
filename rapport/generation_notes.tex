@@ -1,23 +1,32 @@
 \subsection{Génération des notes}
 La première fonctionnalité développée dans le projet est la génération automatique de notes. Elle a joué un rôle essentiel pour tester l’ensemble des autres modules (contrats pédagogiques, bilans de notes, interface utilisateur) sans utiliser de données sensibles ou incomplètes.
 
+\vspace{0.5em}
 Le script \texttt{generer\_notes\_automatique.R} permet d’attribuer à chaque étudiant trois évaluations (DS, CC, TP) par élément constitutif (EC), avec des notes aléatoires comprises entre 0 et 20, arrondies à deux décimales.
 
+\vspace{0.5em}
 Une fois les notes générées, le script \texttt{calcul\_moyennes.R} calcule : la moyenne de chaque EC, la moyenne de chaque UE et le statut de l’UE (\texttt{VALIDE} si la moyenne $\geq$ 10, sinon \texttt{NON VALIDE}).
 
+\vspace{0.5em}
 Pour adapter ces données au format attendu du fichier \texttt{jury.xlsx}, la fonction \texttt{creer\_ligne\_unique.R} extrait et organise les résultats par étudiant et par semestre (S3, S4) obtenus, dans une structure claire et unifiée.
 
+\vspace{0.5em}
 Enfin, le script \texttt{write\_data\_to\_sheet.R} exporte les résultats dans un fichier Excel \texttt{jury.xlsx}, avec une feuille dédiée à chaque semestre.
 
+\vspace{0.5em}
 Cette base de données synthétique est utilisée par les autres modules : génération des contrats pour les redoublants, bilans individuels, et suivi global des validations.
 
 \subsection{Entête Jury}
 La fonctionnalité \texttt{Entête Jury} génère un fichier Excel listant les étudiants n’ayant pas validé leur année, en vue des délibérations pédagogiques.
 
+\vspace{0.5em}
 Le script \texttt{validation\_globale.R} sert à valider automatiquement un étudiant pour un semestre donné (S3 ou S4) en fonction des moyennes pondérées par ECTS dans différentes UE. Il retourne un tableau indiquant si chaque étudiant valide ou non son semestre, avec les moyennes associées. Un semestre est marqué comme non validé si au moins une UE ne l’est pas. Contrairement à l’étape précédente où le statut est calculé par UE, ici il s’agit d’un statut global par semestre.
 
+\vspace{0.5em}
 Une fois cette validation effectuée pour tous les étudiants, le script \texttt{filtrer\_non\_valide.R} extrait ceux qui n'ont pas validé l’année, c’est-à-dire qui ont échoué à au moins un des deux semestres.
 
+\vspace{0.5em}
 Enfin, \texttt{to\_EnteteJury.R} exporte ces résultats dans un fichier Excel nommé \texttt{EnteteJury.xlsx}.
 
+\vspace{0.5em}
 Pour la simulation, une décision finale est ensuite attribuée à chaque étudiant : \texttt{Passe}, \texttt{Red} (redouble), ou \texttt{Exclu}. Cette étape reste aléatoire à ce stade car d'autres critères doivent être pris en compte pour prendre la décision finale, mais elle permet de visualiser le format attendu par l’administration.
