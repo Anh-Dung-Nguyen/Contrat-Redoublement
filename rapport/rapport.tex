@@ -9,7 +9,7 @@
 \title{\textbf{NoteR}}
 
 % Auteurs
-\author{Les auteur.ices
+\author{Les auteurs: Anh Dung NGUYEN, Tho Huy HOANG, Yaëlle LAMBALLAIS, Marion VALLIN-BRAMS
 	\\ \\
 	Encadrante : Laurence Rozé}
 
@@ -25,19 +25,24 @@
 
 % Resume
 \begin{abstract}
-TODO
+Notre projet d’étude pratique, NoteR, est un outil développé en R pour automatiser la génération des contrats de redoublement des deuxièmes annés au département STPI de l’INSA. 
 \end{abstract}
 
+\tableofcontents
+
+
 \section*{Introduction}
-	Notre encadrante, Laurence Roze, est, depuis l'an dernier, repsonsable des deuxièmes années au département Sciences et Techniques Pour l'Ingénieur (STPI) à l'INSA. Cette fonction l'amène à la gérer l'ensemble de la pormotion afin de veiller à son bon encadrement. Cela implique notamment la gestion des contrats de redoublement, la création des emplois du temps, la répartition des élèves par groupes, ... À sa prise de poste, Mme Rozé s'est rendue compte que, peu, voire aucunes de ces opérations n'étaient automatisée, ce qui demande donc un travail long et fastidieux, pouvant amener à des erreurs. Dans le cas des contrats de redoublements, les notes étaient écrites manuellement dans les contrats, ce qui pouvait amener à des erreurs de saisie. C'est dans ce contexte que Mme Roze nous a demandé de déveloper un outil capable d'automatiser le processus de création des contrats de redoublement. Ce dernier devait, à partir du fichier de jury, fichier récapitulatif des notes de tous les étudiants de la promotion, du fichier d'en-tête, regroupant les décisions du jury de fin d'année, et d'un fichier de constantes, descriptif de la maquette, générer un contrat vierge, le contrat de tous les étudiants redoublants et un fichier récapitulatif des matières suivies l'année d'après par chaque étudiant. Ce rapport détaillera les différentes étapes de la conception de notre outil, NoteR, ainsi que l'enjeu de chacunes d'elles, depuis les outils utilisés jusqu'à la conception de l'outil en lui-même et des choix qui l'ont accompagné.
+	Notre encadrante, Laurence Rozé, est, depuis l'an dernier, repsonsable des deuxièmes années au département Sciences et Techniques Pour l'Ingénieur (STPI) à l'INSA. Cette fonction l'amène à gérer l'ensemble de la promotion. Cela implique notamment la gestion des contrats de redoublement, la création des emplois du temps, la répartition des élèves par groupes, ... À sa prise de poste, Mme Rozé s'est rendue compte que, certaines tâches pouvaient être automatisées, évitant un travail long et fastidieux, pouvant amener à des erreurs. Dans le cas des contrats de redoublements, les notes étaient retranscrites manuellement dans les contrats, ce qui pouvait amener à des erreurs de saisie. C'est dans ce contexte que Mme Roze nous a demandé de déveloper un outil capable d'automatiser le processus de création des contrats de redoublement. Ce dernier devait, à partir du fichier de jury, fichier récapitulatif des notes de tous les étudiants de la promotion, d'un fichier regroupant les décisions du jury de fin d'année, et d'un fichier de constantes, descriptif de la maquette, générer un contrat vierge, le contrat de tous les étudiants redoublants et un fichier récapitulatif des matières suivies l'année d'après par chaque étudiant. 
+    
+    Ce rapport détaillera les différentes étapes de la conception de notre outil, NoteR, ainsi que l'enjeu de chacunes d'elles, depuis les outils utilisés jusqu'à la conception de l'outil en lui-même et des choix qui l'ont accompagné. Nous discuterons donc dans une première partie des outils que nous avons utilisés puis nous aborderons le processus de génération de notes fictives. Dans une toisième partie, nous expliquerons la génération des contrats, vierges et complétés, puis nous détaillerons l'interface graphique de NoteR. Enfin, nous finirons par un rapide bilan du projet.
 
 \section{Outils utilisés}
 \subsection{Langage de programmation }
-    L'intégralité de NoteR est codée en R. Cette contrainte était imposée dans le sujet et ce choix peut être motivé par plusieurs raisons :
+    L'intégralité de NoteR est codée en R. Cette contrainte était imposée dans le sujet et ce choix est motivé par plusieurs raisons :
         \begin{itemize}
             \item NoteR doit s'intégrer dans un outil préexistant développé en R par Mme Rozé,
-            \item R est un langage de programmation qui n'est pas aussi régulièrement mis à jour que d'autres langages, ce qui permet d'assurer la longévité de NoteR,
-            \item  R est un langage traditionnellmeent utilisé pour les statistiques et Mme Rozé voulait se laisser la possibilité dans le futur de calculer des statistiques sur les redoublants de deuxième année.
+            \item Les mises à jour de R et de ses packages sont généralement retrocompatibles, ce qui signifie que le code écrit avec une version antérieure continue de fonctionner sans nécessiter d'adaptation majeure, ce qui est capital pour assurer la longévité de NoteR,
+            \item  R est un langage traditionnellmeent utilisé pour les statistiques, aspect important pour les outils devéloppés par Mme Rozé.
         \end{itemize}
         Nous avons ainsi utilisé plusieurs libraries de R et particulièrement, pour la conception de l'interface graphique de NoteR, la librairie RShiny.
 \subsection{Outils collaboratifs }
@@ -46,13 +51,12 @@ TODO
 \section{Génération notes }
   \input{"generation_notes.tex"}
 
-\section{Génération contrats redoublants}
-  La génération des contrats repose entièrement sur le fichier \texttt{MCC}. Toute modification du \texttt{MCC} (comme les noms d’UE ou d’EC) est automatiquement prise en compte sans avoir besoin de modifier les programmes de génération de contrats.
+\section{Génération contrats redoublant.es}
   \input{"generation_contrat.tex"}
 
 \section{Interface graphique }	
 
-    À mesure de l'avancée du projet et après avoir discuté avec Mme Rozé de l'utilisation future de NoteR, nous avons convenu de développer une interface graphique. En effet, même si ce n'était pas demandé dans les contraintes initiales,  dans une démarche d'améliorations de l'outil pour une utilisation par un futur responsable d'année non-informaticien, nous pensons que c'est le meilleur moyen de le rendre intuitif et facile d'utilisation. Nous avons donc regroupé les différentes fonctions en 4 boutons : un  pour générer le tableau contenant les notes de l'étudiant sur lequel on peut rajouter à la main les croix correspondant aux EC déjà validés mais qui seront repassés l'année suivante, un pour la génération du contrat de l'étuidiant sélectionné, un pour la génération de l'ensemble des contrats des redoublants de deuxième année et enfin un pour la génération du fichier récpitulatif. Cette interface ne prend en entrée que le fichier d'en-tête, afin de récupérer la liste des étudiants redoublants et le fichier de jury, nécessaire à la création du tableau de notes de l'étudiant courant. L'interface permet donc de générer facilement l'ensemble des sorties attendues et minimise le risque d'erreur humaine.
+   À mesure de l'avancée du projet et après avoir discuté avec Mme Rozé de l'utilisation future de NoteR, nous avons convenu de développer une interface graphique. En effet, même si ce n'était pas demandé dans les contraintes initiales,  dans une démarche d'amélioration de l'outil pour une utilisation par un futur responsable d'année non-informaticien, nous pensons que c'est le meilleur moyen de le rendre intuitif et facile d'utilisation. Nous avons donc regroupé les différentes fonctions en 4 boutons : un  pour générer le tableau contenant les notes de l'étudiant sur lequel on peut rajouter à la main les croix correspondant aux EC déjà validés mais qui seront repassés l'année suivante, un pour la génération du contrat de l'étudiant sélectionné, un pour la génération de l'ensemble des contrats des redoublants de deuxième année et enfin un pour la génération du fichier récpitulatif. Cette interface ne prend en entrée que le fichier d'en-tête, afin de récupérer la liste des étudiants redoublants et le fichier de jury, nécessaire à la création du tableau de notes de l'étudiant courant. L'interface permet donc de générer facilement l'ensemble des sorties attendues et minimise le risque d'erreur humaine.
 
     (Image de l'interface à insérer quand elle sera finie)
 
