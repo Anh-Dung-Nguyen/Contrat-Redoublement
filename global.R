@@ -10,7 +10,7 @@ notes_etudiants <- list()
 
 # Charger les fichiers ui et server
 source("ui.R")
-#source("contrat_notes.R")
+source("contrat_notes.R")
 
 source("server.R")
 
