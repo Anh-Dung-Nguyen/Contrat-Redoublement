@@ -17,27 +17,10 @@ server <- function(input, output, session) {
   # en effet le df affiché sera maj des que l'etudiant selectionne est modifié
   selected_student <- reactive({
     req(input$select_value)
-    #print("affichage de l'étudiant selectionné")
-    #print(input$select_value)
     lesRedoublants <- lesRedoublants_reactive()
-    # Extraire le nom et prénom depuis input$select_value
-    selected <- strsplit(input$select_value, " ")[[1]]
-    nom <- selected[1]
-    prenom <- selected[2]
-    #cat("Nom:", nom, "\n")
-    #cat("Prénom:", prenom, "\n")
-    
-    # Utiliser match() pour trouver l'index du nom et prénom dans le dataframe
-    # le calcul de l'index ne fonctionnait pas
-    #index <- match(paste(nom, prenom), paste(lesRedoublants$Nom, lesRedoublants$Prénom))
-    index <- which(toupper(lesRedoublants$Nom) == nom & lesRedoublants$Prénom == prenom)
-    #cat("Index trouvé:", index, "\n")
-    req(index)  # S'assurer que l'index est trouvé
-    # attention mettre message d'erreur si non trouvé
-    
-    res <- list(nom = lesRedoublants$Nom[index], prenom = lesRedoublants$Prénom[index])
-    #print("fin d'execution de selected_student")
-    res
+    etudiant <- lesRedoublants %>% filter(ID == as.numeric(input$select_value))
+    req(nrow(etudiant) == 1)
+    list(nom = etudiant$Nom, prenom = etudiant$Prénom, id = etudiant$ID)
   })
   
   observeEvent(input$fichier_en_tete_jury, {
@@ -47,7 +30,8 @@ server <- function(input, output, session) {
     print(head(data))
     filtered_data <- data %>%
       filter(`Decision finale` == "Red") %>%
-      select(Nom, Prénom)
+      mutate(ID = row_number()) %>%
+      select(ID, Nom, Prénom)
     lesRedoublants_reactive(filtered_data)
     print("fin du traitement du fichier_en_tete_jury")
   })
@@ -57,24 +41,19 @@ server <- function(input, output, session) {
     lesRedoublants <- lesRedoublants_reactive()
     req(nrow(lesRedoublants) > 0)
     
-    choices <- paste(toupper(lesRedoublants$Nom), lesRedoublants$Prénom)
+    noms_affiches <- paste(toupper(lesRedoublants$Nom), lesRedoublants$Prénom)
+    ids <- lesRedoublants$ID
+    
+    choix <- setNames(ids, noms_affiches) 
     selectInput("select_value", "Choisir un étudiant redoublant",
-                choices = choices)
-  })
-  
-  # A modifier pour afficher le contrat et pas le nom de l'étudiant sélectionné
-  output$text <- renderText({
-    req(input$select_value)
-    paste("Vous avez sélectionné : ", input$select_value)
+                choices = choix)
   })
   
   observeEvent(input$Bouton1, {
     print("generation du contrat d'un étudiant")
     student <- selected_student()
     req(student)  # Vérifier que selected_student() n'est pas NULL
-    #print("affichage de l'étudiant sélectionné")
-    #print(student)
-    
+
     nom <- student$nom
     prenom <- student$prenom
     cle <- paste(nom,prenom)
@@ -83,7 +62,7 @@ server <- function(input, output, session) {
 
     # Générer les notes et les stocker dans la valeur réactive
     if(is.null(notes_etudiants[[cle]])){
-      notes <- generation_df_notes(1)
+      notes <- generation_df_notes(student$id)
       notes_etudiants[[cle]] <<- notes
     }else {
       notes <- notes_etudiants[[cle]]
@@ -165,7 +144,7 @@ server <- function(input, output, session) {
     # Appeler la fonction de génération du contrat
     tryCatch({
       doc <- read_docx()
-      doc <- generation(1, doc, notes_etudiant = notes_modifiees)
+      doc <- generation(student$id, doc, notes_etudiant = notes_modifiees)
       print(doc, target = fichier_sortie)
       showNotification(paste("Contrat généré pour", prenom, nom), type = "message")
     }, error = function(e) {
