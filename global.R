@@ -3,9 +3,6 @@ library(ggplot2)
 library(dplyr)
 library(readxl)
 
-lesContratsEt<- c()
-lesNomsEt<-c()
-
 notes_etudiants <- list()
 
 # Charger les fichiers ui et server
