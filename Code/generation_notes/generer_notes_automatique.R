@@ -30,7 +30,7 @@ generer_notes_aleatoires <- function(tableau) {
 # Générer 100 étudiants avec données
 LesUE_notes <- bind_rows(lapply(1:100, function(i) {
   tableau_etudiant <- generer_notes_aleatoires(LesUE)
-  tableau_etudiant$ID <- sprintf("E%03d", i)
+  tableau_etudiant$ID <- i  # ID sans zéro devant
   tableau_etudiant$Nom <- sample(noms, 1)
   tableau_etudiant$Prénom <- sample(prenoms, 1)
   return(tableau_etudiant)
