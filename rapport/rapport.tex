@@ -58,6 +58,13 @@ Notre projet d’étude pratique, NoteR, est un outil développé en R pour auto
 
    À mesure de l'avancée du projet et après avoir discuté avec Mme Rozé de l'utilisation future de NoteR, nous avons convenu de développer une interface graphique. En effet, même si ce n'était pas demandé dans les contraintes initiales, dans une démarche d'amélioration de l'outil pour une utilisation par un futur responsable d'année non-informaticien, nous pensons que c'est le meilleur moyen de le rendre intuitif et facile d'utilisation. Nous avons donc regroupé les différentes fonctions en 4 boutons : un pour générer le tableau contenant les notes de l'étudiant sur lequel on peut rajouter à la main les croix correspondant aux EC déjà validés mais qui seront repassés l'année suivante, un pour la génération du contrat de l'étudiant sélectionné, un pour la génération de l'ensemble des contrats des redoublants de deuxième année et enfin un pour la génération du fichier récapitulatif. Cette interface ne prend en entrée que le fichier d'en-tête, afin de récupérer la liste des étudiants redoublants et le fichier de jury, nécessaire à la création du tableau de notes de l'étudiant courant. L'interface permet donc de générer facilement l'ensemble des sorties attendues et minimise le risque d'erreur humaine.
 
+   \begin (figure) [ht]
+  	 \centering
+  	 \includegreaphics[width=\linewidth]{image_interface.jpg}
+  	 \caption( Interface graphique permettant la génération du contrat d'un redoublant avec notamment la possibilitéde rajouté des croix uniquement dans la colonne EcValRepasse, correspondant aux matières que l'étudiant choisit, en accord avec le responsable pédagogique, de repasser l'année suivant même si l'étudiant a déjà validés ces matières. L'interface permet également la génération de l'ensemble des contrats de redoublement et du fichier de bilan.)
+  	 \label (interface_graphique)
+   \end(figure)
+
     (Image de l'interface à insérer quand elle sera finie)
 
 \section{Génération du bilan }
