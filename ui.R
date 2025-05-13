@@ -14,8 +14,9 @@ ui <- fluidPage(
                  fileInput("fichierjury","Ajouter le fichier de jury", accept = ".xlsx"),
                  uiOutput("dynamic_select"),
                  actionButton("Bouton1", "Génération du tableau de notes de l'étudiant sélectionné",  style = "white-space: normal; word-wrap: break-word; width: 100%;"),
-                 actionButton("Bouton3","Génération du contrat de l'étudiant sélectionné",  style = "white-space: normal; word-wrap: break-word; width: 100%;;margin-top: 15px;" ),
-                 actionButton("Bouton2", "Génération de l'ensemble des contrats des redoublants",   style = "white-space: normal; word-wrap: break-word; width: 100%;margin-top: 15px;")
+                 actionButton("Bouton2","Génération du contrat de l'étudiant sélectionné",  style = "white-space: normal; word-wrap: break-word; width: 100%;;margin-top: 15px;" ),
+                 actionButton("Bouton3", "Génération de l'ensemble des contrats des redoublants",   style = "white-space: normal; word-wrap: break-word; width: 100%;margin-top: 15px;"),
+                 actionButton("Bouton4","Génération du fichier de bilan", style = "white-space: normal; word-wrap: break-word; width: 100%;margin-top: 15px;")
                  
     ),
     mainPanel(
