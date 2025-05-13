@@ -17,5 +17,5 @@ write_data_to_sheet <- function(file_path, sheet_name, data_to_write) {
   saveWorkbook(wb, file_path, overwrite = TRUE)
 }
 
-write_data_to_sheet("./Liste+Bilan contrat/jury.xlsx", "S3", resumes_s3)
-write_data_to_sheet("./Liste+Bilan contrat/jury.xlsx", "S4", resumes_s4)
+write_data_to_sheet("./Fichiers/jury.xlsx", "S3", resumes_s3)
+write_data_to_sheet("./Fichiers/jury.xlsx", "S4", resumes_s4)
