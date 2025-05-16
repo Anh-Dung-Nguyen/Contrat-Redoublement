@@ -1,4 +1,4 @@
-source("./Code/contrat_notes.R")
+source("contrat_notes.R")
 source("./Code/generation_bilan/RecupererNomPrenom.R")
 source("./Code/generation_bilan/filterRedoublement.R")
 for (j in indice_redoublements_vector){

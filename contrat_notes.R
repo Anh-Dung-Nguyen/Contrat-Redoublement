@@ -175,7 +175,7 @@ ecriture <- function(ft_notes, ft_sign, nom_prenom){
 
 generation_df_notes <- function(id){
   # récupération du fichier jury
-  fichier_jury <- "./jury.xlsx"
+  fichier_jury <- "./Fichiers/jury.xlsx"
   
   # récupération des notes de l'étudiant·e
   notes_S3 <- notes_from_jury(fichier_jury, 2, col_S3, id)
@@ -200,7 +200,7 @@ generation_df_notes <- function(id){
 }
 
 nom_prenom <- function(id){
-  fichier_jury <- "./jury.xlsx"
+  fichier_jury <- "./Fichiers/jury.xlsx"
   semestre <- read_excel(fichier_jury, sheet = 2, col_types = "text")
   nom <- semestre[semestre[[1]] == id, 2]
   nom <- unlist(nom[rowSums(is.na(nom)) != ncol(nom), ])
@@ -235,11 +235,4 @@ generation <- function(id, doc, notes_etudiant = NULL){
 
 
 
-# création d'un nouvel objet de document Word
-doc <- read_docx()
 
-#génération du contrat
-generation("1",doc)
-
-# pour sauvegarder le document
-print(doc, target = "./contrat_notes_9_mai.docx")
